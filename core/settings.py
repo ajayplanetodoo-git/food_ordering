@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -71,11 +74,20 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+'''
+here setting for multi user connection with diffrence credincials 
+just create .env text file  in root project_dir with parmerts like DB_NAME so on 
+and bellow setting now app any one can used on multimachines   
+'''
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("DB_NAME"),
+        'USER' : os.getenv("DB_USER"),
+        "PASSWORD" : os.getenv("DB_PASSWORD") ,
+        'HOST' : os.getenv("DB_HOST"),
+        "POST" :os.getenv("DB_PORT")
+
     }
 }
 
