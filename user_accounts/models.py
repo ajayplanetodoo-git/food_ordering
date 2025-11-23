@@ -26,6 +26,7 @@ class UserManeger(BaseUserManager):
         user = self.create_user(
             email = self.normalize_email(email),
             username = username,
+            password= password,
             first_name = first_name,
             last_name = last_name,
         )
@@ -58,7 +59,7 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
-    is_sueradmin = models.BooleanField(default=False)
+    is_superadmin = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username','first_name',"last_name"]
@@ -70,5 +71,5 @@ class User(AbstractBaseUser):
     def has_perm(self,perms, obj=None):
         return self.is_admin
 
-    def has_model_perms(self,app_lable):
+    def has_module_perms(self,app_lable):
         return True
