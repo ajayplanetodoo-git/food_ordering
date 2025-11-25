@@ -3,9 +3,11 @@ from django.contrib.auth.models import AbstractBaseUser , BaseUserManager
 
 from django.contrib.auth import get_user_model
 
-
 # Create your models here.
-'''usermanager cannot create or hold any fields it only contain methods '''
+'''usermanager cannot create or hold any fields it only contain methods 
+BaseUsermanager check how and what used sholud be created like normaluser or Superuser
+when normal user it call create_user function
+'''
 class UserManeger(BaseUserManager):
     def create_user(self,first_name, last_name,username, email, password=None):
         if not email:
@@ -22,6 +24,9 @@ class UserManeger(BaseUserManager):
         user.set_password(password)
         user.save(using =self._db)
         return user
+    
+    #  when user is super user then this call create_superuser  function it basicall for admin pandel login  python manage.py cretaesuperuser
+    #  insted of defult username it will ask for email  urls : 8000/admin
     def create_superuser(self,first_name, last_name,username, email, password=None):
         user = self.create_user(
             email = self.normalize_email(email),
@@ -91,4 +96,11 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.email
+
+
+
+
+
+
+
 
