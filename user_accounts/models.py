@@ -9,6 +9,12 @@ BaseUsermanager check how and what used sholud be created like normaluser or Sup
 when normal user it call create_user function
 '''
 class UserManeger(BaseUserManager):
+    '''
+    when if you want to create user or superuser from anywhere this two function create_user and createsuperuser  are required always 
+    without this two function cannot create any user and hasing things
+
+    '''
+    
     def create_user(self,first_name, last_name,username, email, password=None):
         if not email:
             raise ValueError("User must have email address")
@@ -21,7 +27,7 @@ class UserManeger(BaseUserManager):
             last_name = last_name,
 
         )
-        user.set_password(password)
+        user.set_password(password) 
         user.save(using =self._db)
         return user
     
