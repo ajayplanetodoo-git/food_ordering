@@ -28,7 +28,6 @@ def post_save_signal_create_profile_receiver(sender,instance,created,**kwargs):
             # create user profile if not exist
             UserProfile.objects.create(user=instance)
             print("user profile is not exist but ,i created one")
-        print("User is Updated")
 
 @receiver(pre_save,sender=User)
 def pre_save_profile_receiver(sender, instance, **kwargs):
