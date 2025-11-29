@@ -7,7 +7,7 @@
 
 .show-notification {
     position: fixed;
-    top: -100px;        /* Start hidden above */
+    top: -100px;        
     right: 20px;
     animation: show-toast 5s ease forwards;
     animation-timing-function: ease-in-out;
