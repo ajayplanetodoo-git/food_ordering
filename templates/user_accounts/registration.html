@@ -73,8 +73,7 @@
                                                         {% endfor %}
                                                     {% endif %}
                                                 {% endfor %}
-                                                <li style="color: red;">{{forms.non_field_errors}}
-
+                                                <li style="color: red;">{{forms.non_field_errors}} <!--  this erros line show password not match come from forms.py of clean_method  -->
                                                 </li>
 
                                             </ul>
@@ -84,12 +83,6 @@
                                                         <div class="payment-holder">
                                                             <input type="submit" value="REGISTER" id="btn-next-restaurant-information" class="bgcolor">
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                   {% include "includes/alert.html" %}
                                                     </div>
                                                 </div>
                                             </div>

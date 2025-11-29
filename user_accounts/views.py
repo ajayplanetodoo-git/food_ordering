@@ -32,7 +32,7 @@ def registeruser(request):
                 )
             user.role = User.CUSTOMER
             user.save()
-            messages.success(request,"You account has been registered succesfully")
+            messages.success(request,"You account has been registered succesfully")  #  here we are use django messeges 
             print("User is created")
             return redirect("userregister")
         else:
