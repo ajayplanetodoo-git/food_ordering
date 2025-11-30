@@ -1,7 +1,8 @@
 from django.shortcuts import render , redirect
 from django.http import HttpResponse
 from .forms import Userform
-from .models import User
+from vendor_app.forms import Vendorform
+from .models import User , UserProfile
 from django.contrib import messages
 
 # Create your views here.
@@ -46,4 +47,40 @@ def registeruser(request):
 
 
 def registervendor(request):
-    return render(request,"user_accounts/vendor_registration.html")
+    if request.method == 'POST':
+        user_form = Userform(request.POST)
+        ven_form = Vendorform(request.POST,request.FILES)
+        if user_form.is_valid() and ven_form.is_valid():
+            firstname = user_form.cleaned_data.get("first_name")
+            lastname = user_form.cleaned_data.get("last_name")
+            username = user_form.cleaned_data.get("username")
+            email = user_form.cleaned_data.get('email')
+            password = user_form.cleaned_data.get('password')
+            user = User.objects.create_user(
+                first_name=firstname,
+                last_name=lastname,
+                username=username,
+                email=email,
+                password=password
+            )
+            user.role = User.VENDOR
+            user.save()
+            vendor = ven_form.save(commit=False)
+            vendor.user = user
+            user_profile = UserProfile.objects.get(user=user)
+            vendor.save()
+            messages.success(request,"Your Account Registartion Succesfully! please wait for approval ")
+            return redirect("vendorregister")
+        else:
+            print("form is in valid")
+            print(user_form.errors)
+    else:
+        user_form = Userform()
+        ven_form = Vendorform()
+
+
+    conatext ={
+        "u_form": user_form,
+        "v_form": ven_form,
+    }
+    return render(request,"user_accounts/vendor_registration.html",conatext)
