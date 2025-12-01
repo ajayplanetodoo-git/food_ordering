@@ -65,9 +65,13 @@ def registervendor(request):
             )
             user.role = User.VENDOR
             user.save()
+
+#  Get profile created by signal
+            user_profile = UserProfile.objects.get(user=user)
+#   create vendor
             vendor = ven_form.save(commit=False)
             vendor.user = user
-            user_profile = UserProfile.objects.get(user=user)
+            vendor.user_profile = user_profile
             vendor.save()
             messages.success(request,"Your Account Registartion Succesfully! please wait for approval ")
             return redirect("vendorregister")
