@@ -3,11 +3,14 @@ from django.http import HttpResponse
 from .forms import Userform
 from vendor_app.forms import Vendorform
 from .models import User , UserProfile
-from django.contrib import messages
+from django.contrib import messages , auth
 
 # Create your views here.
 def registeruser(request):
-    if request.method=="POST":
+    if request.user.is_authenticated:
+        messages.warning(request,"You are already looged in!")
+        return redirect("dashboard")
+    elif request.method=="POST":
         print(request.POST)
         form = Userform(request.POST)
         if form.is_valid():
@@ -47,7 +50,10 @@ def registeruser(request):
 
 
 def registervendor(request):
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        messages.warning(request,"You are already looged in!")
+        return redirect("dashboard")
+    elif request.method == 'POST':
         user_form = Userform(request.POST)
         ven_form = Vendorform(request.POST,request.FILES)
         if user_form.is_valid() and ven_form.is_valid():
@@ -74,9 +80,10 @@ def registervendor(request):
             vendor.user_profile = user_profile
             vendor.save()
             messages.success(request,"Your Account Registartion Succesfully! please wait for approval ")
-            return redirect("vendorregister")
+            return redirect("vendorregister")  # when anywhere we used any django messages.success the we have to redircet is complusery esle it not work propwely
+
         else:
-            print("form is in valid")
+            print("form is invalid")
             print(user_form.errors)
     else:
         user_form = Userform()
@@ -88,3 +95,35 @@ def registervendor(request):
         "v_form": ven_form,
     }
     return render(request,"user_accounts/vendor_registration.html",conatext)
+
+
+
+def login(request):
+    if request.user.is_authenticated:
+        messages.warning(request,"You are already looged in!")
+        return redirect("dashboard")
+    elif request.method == "POST":
+        email = request.POST['email']
+        password = request.POST['password']
+
+        user = auth.authenticate(username=email,password=password)   # here we areathenticate it take two paramaerts  from  email couse in user model we used 
+                                                                    # USERNAME_FIELD = 'email' so 
+        
+        if user is not None:
+            auth.login(request,user)
+            messages.success(request,"You are logged in ")
+            return redirect('dashboard')
+        else:
+            messages.error(request,"Invalid login credentials")
+            return redirect("login")
+        
+    return render(request, 'user_accounts/login.html')
+
+
+def logout(request):
+    auth.logout(request)
+    messages.info(request, "You are logged out")
+    return redirect('login')
+
+def dashboard(request):
+    return render(request,"user_accounts/dashboard.html")

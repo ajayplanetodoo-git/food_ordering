@@ -79,14 +79,25 @@
                                         <li>
                                             <!-- this  what fields contains erro like user alredy exist n all -->
                                             <ul class="errolist">
-                                                {% for fields in forms %}
+                                                {% for fields in u_form %}
                                                 {% if fields.errors %}
-                                                {% for error in fields.errors %}
-                                                <li style="color: red;"> {{error}}</li>
-                                                {% endfor %}
+                                                    {% for error in fields.errors %}
+                                                    <li style="color: red;"> {{error}}</li>
+                                                    {% endfor %}
                                                 {% endif %}
                                                 {% endfor %}
-                                                <li style="color: red;">{{forms.non_field_errors}}
+                                                <li style="color: red;">{{u_form.non_field_errors}}
+                                                    <!--  this erros line show password not match come from forms.py of clean_method  -->
+                                                </li>
+
+                                                {% for fields in v_form %}
+                                                {% if fields.errors %}
+                                                    {% for error in fields.errors %}
+                                                    <li style="color: red;"> {{error}}</li>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                {% endfor %}
+                                                <li style="color: red;">{{v_form.non_field_errors}}
                                                     <!--  this erros line show password not match come from forms.py of clean_method  -->
                                                 </li>
 
