@@ -5,9 +5,24 @@ from vendor_app.forms import Vendorform
 from .models import User , UserProfile
 from django.contrib import messages , auth
 from .utils import detectuser
-from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.decorators import login_required , user_passes_test
+from django.core.exceptions import PermissionDenied
 # Create your views here.
+
+# Restrict vendor from accesing customer page
+def check_roles_vendor(user):
+    if user.role == 1:
+        return True
+    else:
+        raise PermissionDenied
+
+# Restrict customer from accesing vendor page
+def check_roles_customer(user):
+    if user.role == 2:
+        return True
+    else:
+        raise PermissionDenied
+
 def registeruser(request):
     if request.user.is_authenticated:
         messages.warning(request,"You are already looged in!")
@@ -126,17 +141,24 @@ def logout(request):
     auth.logout(request)
     messages.info(request, "You are logged out")
     return redirect('login')
+'''
+this  function is used for  detect which  redirect to util.py function detectuser()  ,
+kind of user id  tha  vendor, customer or any thing then i will redicret to accordingly 
+if user is vendor it will redirect to vendordashboard or customerdashboard urls and page
+'''
 
-@login_required(login_url='login') # this is 
+@login_required(login_url='login') # this is  decorater used for rectrictions 
 def myaccount(request):
     user = request.user
     redirectUrl = detectuser(user)  # here the use of helper function from util.py
     return redirect(redirectUrl)
 
 @login_required(login_url='login')
+@user_passes_test(check_roles_customer)
 def custmerdashboard(request):
     return render(request,"user_accounts/custdashboard.html")
 
 @login_required(login_url='login')
+@user_passes_test(check_roles_vendor)
 def vendordashboard(request):
     return render(request,"user_accounts/vendashboard.html")
