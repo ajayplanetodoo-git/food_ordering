@@ -1,0 +1,9 @@
+{% autoescape off %}
+Hi {{ user.firts_name }},
+
+please click on below link to confirm your registration.
+http://{{domain}}{% url 'activate' uid64=uid token=token %}
+<!--
+ ex : http://127.0.0.1:8000/active/MTM/hjikhgdsgbsdhb/   this kind of link will genrate
+-->
+{% endautoescape %}

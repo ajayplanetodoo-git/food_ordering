@@ -9,19 +9,6 @@ from django.contrib.auth.decorators import login_required , user_passes_test
 from django.core.exceptions import PermissionDenied
 # Create your views here.
 
-# Restrict vendor from accesing customer page
-def check_roles_vendor(user):
-    if user.role == 1:
-        return True
-    else:
-        raise PermissionDenied
-
-# Restrict customer from accesing vendor page
-def check_roles_customer(user):
-    if user.role == 2:
-        return True
-    else:
-        raise PermissionDenied
 
 def registeruser(request):
     if request.user.is_authenticated:
@@ -53,9 +40,11 @@ def registeruser(request):
                 )
             user.role = User.CUSTOMER
             user.save()
+            #  send verification email
+            send_varification_link(request,user)
             messages.success(request,"You account has been registered succesfully")  #  here we are use django messeges 
             print("User is created")
-            return redirect("userregister")
+            return redirect("login")
         else:
             print(form.errors)
     else:
@@ -97,7 +86,7 @@ def registervendor(request):
             vendor.user_profile = user_profile
             vendor.save()
             messages.success(request,"Your Account Registartion Succesfully! please wait for approval ")
-            return redirect("vendorregister")  # when anywhere we used any django messages.success the we have to redircet is complusery esle it not work propwely
+            return redirect("login")  # when anywhere we used any django messages.success the we have to redircet is complusery esle it not work propwely
 
         else:
             print("form is invalid")
@@ -137,10 +126,20 @@ def login(request):
     return render(request, 'user_accounts/login.html')
 
 
-def logout(request):
-    auth.logout(request)
-    messages.info(request, "You are logged out")
-    return redirect('login')
+# Restrict vendor from accesing customer page
+def check_roles_vendor(user):
+    if user.role == 1:
+        return True
+    else:
+        raise PermissionDenied
+
+# Restrict customer from accesing vendor page
+def check_roles_customer(user):
+    if user.role == 2:
+        return True
+    else:
+        raise PermissionDenied
+
 '''
 this  function is used for  detect which  redirect to util.py function detectuser()  ,
 kind of user id  tha  vendor, customer or any thing then i will redicret to accordingly 
@@ -150,7 +149,7 @@ if user is vendor it will redirect to vendordashboard or customerdashboard urls 
 @login_required(login_url='login') # this is  decorater used for rectrictions 
 def myaccount(request):
     user = request.user
-    redirectUrl = detectuser(user)  # here the use of helper function from util.py
+    redirectUrl = detectuser(user)  # here the use of helper function from util.py  detect user to check which kind of user is
     return redirect(redirectUrl)
 
 @login_required(login_url='login')
@@ -162,3 +161,8 @@ def custmerdashboard(request):
 @user_passes_test(check_roles_vendor)
 def vendordashboard(request):
     return render(request,"user_accounts/vendashboard.html")
+
+def logout(request):
+    auth.logout(request)
+    messages.info(request, "You are logged out")
+    return redirect('login')
