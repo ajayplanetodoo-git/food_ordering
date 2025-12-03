@@ -4,12 +4,14 @@ from .forms import Userform
 from vendor_app.forms import Vendorform
 from .models import User , UserProfile
 from django.contrib import messages , auth
+from .utils import detectuser
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def registeruser(request):
     if request.user.is_authenticated:
         messages.warning(request,"You are already looged in!")
-        return redirect("dashboard")
+        return redirect("myaccount")
     elif request.method=="POST":
         print(request.POST)
         form = Userform(request.POST)
@@ -52,7 +54,7 @@ def registeruser(request):
 def registervendor(request):
     if request.user.is_authenticated:
         messages.warning(request,"You are already looged in!")
-        return redirect("dashboard")
+        return redirect("myaccount")
     elif request.method == 'POST':
         user_form = Userform(request.POST)
         ven_form = Vendorform(request.POST,request.FILES)
@@ -101,7 +103,7 @@ def registervendor(request):
 def login(request):
     if request.user.is_authenticated:
         messages.warning(request,"You are already looged in!")
-        return redirect("dashboard")
+        return redirect("myaccount")
     elif request.method == "POST":
         email = request.POST['email']
         password = request.POST['password']
@@ -112,7 +114,7 @@ def login(request):
         if user is not None:
             auth.login(request,user)
             messages.success(request,"You are logged in ")
-            return redirect('dashboard')
+            return redirect('myaccount')
         else:
             messages.error(request,"Invalid login credentials")
             return redirect("login")
@@ -125,5 +127,16 @@ def logout(request):
     messages.info(request, "You are logged out")
     return redirect('login')
 
-def dashboard(request):
-    return render(request,"user_accounts/dashboard.html")
+@login_required(login_url='login') # this is 
+def myaccount(request):
+    user = request.user
+    redirectUrl = detectuser(user)  # here the use of helper function from util.py
+    return redirect(redirectUrl)
+
+@login_required(login_url='login')
+def custmerdashboard(request):
+    return render(request,"user_accounts/custdashboard.html")
+
+@login_required(login_url='login')
+def vendordashboard(request):
+    return render(request,"user_accounts/vendashboard.html")

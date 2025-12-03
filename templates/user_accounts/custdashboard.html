@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>welcome {{user.username}}</h1>
+    {% if user.role %}
+       <p> This  is a {{user.get_role}}</p>
+    {% endif %}
+    <!-- <p> This is a {{user.role}} </p> -->
+{% endblock %}
