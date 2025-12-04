@@ -9,6 +9,7 @@ urlpatterns =[
     path("logout/", views.logout, name="logout" ),
     path("custdashboard/", views.custmerdashboard, name="custdashboard" ),
     path("venddashboard/", views.vendordashboard, name="vendashboard" ),
+    path('activate/<uiddb64>/<token>/',views.activate, name='activate'),
 
 
     
