@@ -25,6 +25,7 @@ def detectuser(user):
 
 #     This function send vefication email
 def send_varification_link(request, user):
+    from_mail = settings.DEFAULT_FROM_EMAIL
     current_site = get_current_site(request)
     mail_subject = "Please active you account"
     messege = render_to_string("user_accounts/emails/account_verfy_email.html", {
