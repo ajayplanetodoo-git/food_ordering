@@ -4,7 +4,7 @@ from .forms import Userform
 from vendor_app.forms import Vendorform
 from .models import User , UserProfile
 from django.contrib import messages , auth
-from .utils import detectuser
+from .utils import detectuser , send_varification_link
 from django.contrib.auth.decorators import login_required , user_passes_test
 from django.core.exceptions import PermissionDenied
 # Create your views here.
@@ -77,6 +77,8 @@ def registervendor(request):
             )
             user.role = User.VENDOR
             user.save()
+            #  send verification email`
+            send_varification_link(request,user)
 
 #  Get profile created by signal
             user_profile = UserProfile.objects.get(user=user)
@@ -103,7 +105,9 @@ def registervendor(request):
     return render(request,"user_accounts/vendor_registration.html",conatext)
 
 
-
+def activate(request,uidb64, token):
+    #activate the user by setting the is_active status true
+    return
 def login(request):
     if request.user.is_authenticated:
         messages.warning(request,"You are already looged in!")
