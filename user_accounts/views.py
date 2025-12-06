@@ -4,7 +4,7 @@ from .forms import Userform
 from vendor_app.forms import Vendorform
 from .models import User , UserProfile
 from django.contrib import messages , auth
-from .utils import detectuser , send_varification_link
+from .utils import detectuser , send_varification_link 
 from django.contrib.auth.decorators import login_required , user_passes_test
 from django.core.exceptions import PermissionDenied
 from django.utils.http import urlsafe_base64_decode
@@ -45,7 +45,9 @@ def registeruser(request):
             user.role = User.CUSTOMER
             user.save()
             #  send verification email
-            send_varification_link(request,user)
+            mail_subject = "activate your account"
+            mail_template = 'user_accounts/emails/account_verfy_email.html'
+            send_varification_link(request,user,mail_subject,mail_template)
             messages.success(request,"You account has been registered succesfully")  #  here we are use django messeges 
             print("User is created")
             return redirect("login")
@@ -81,16 +83,22 @@ def registervendor(request):
             )
             user.role = User.VENDOR
             user.save()
-            #  send verification email`
-            send_varification_link(request,user)
-
-#  Get profile created by signal
-            user_profile = UserProfile.objects.get(user=user)
+            
 #   create vendor
             vendor = ven_form.save(commit=False)
             vendor.user = user
+            #  Get profile created by signal
+            user_profile = UserProfile.objects.get(user=user)
             vendor.user_profile = user_profile
             vendor.save()
+
+            #  send verification email`
+            mail_subject = "activate your account"
+            mail_template = 'user_accounts/emails/account_verfy_email.html'
+            send_varification_link(request,user,mail_subject,mail_template)
+
+
+
             messages.success(request,"Your Account Registartion Succesfully! please wait for approval ")
             return redirect("login")  # when anywhere we used any django messages.success the we have to redircet is complusery esle it not work propwely
 
@@ -190,3 +198,33 @@ def logout(request):
     auth.logout(request)
     messages.info(request, "You are logged out")
     return redirect('login')
+
+def forgot_password(request):
+    if request.method =="POST":
+        email = request.POST['email']
+
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email__exact=email)
+
+            #send reset password 
+            mail_subject = "Reset Your Password"
+            mail_template = 'user_accounts/emails/reset_password_email.html'
+            send_varification_link(request,user,mail_subject,mail_template)
+            messages.success(request,"Password reset email has been send on your email")
+            return redirect("login")
+        
+        else:
+            messages.error(request,"Account doesnot exist")
+            return redirect("forgot_password")
+
+    return render(request,'user_accounts/forgot_password.html')
+
+
+def reset_password_validate(request,uiddb64,token):
+    # validating the user by decoding the   token and user.pk
+    return 
+
+def reset_password(request):
+    return render(request,'user_accounts/reset_password.html')
+
+

@@ -15,8 +15,6 @@ from pathlib import Path
 import os
 # load_dotenv() # for db config
 from decouple import config
-from dotenv import load_dotenv
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -146,18 +144,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # email configraion
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# Email_HOST=config("EMAIL_HOST")
+# Email_HOST=config("Email_HOST")
 # EMAIL_PORT=config("EMAIL_PORT",cast=int)
 # EMAIL_HOST_USER=config('EMAIL_HOST_USER')
 # EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
 # EMAIL_USE_TLS = True
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # your new app password
-DEFAULT_FROM_EMAIL = 'Food online Marketplace <ajay.planetodoo@gmail.com>'
+# DEFAULT_FIELD_EMAIL = f"Foodonline Marketplace <ajay.planetodoo@gmail.com>"
