@@ -23,11 +23,11 @@ def detectuser(user):
 
 
 #     This function send vefication email
-def send_varification_link(user):
+def send_varification_link(request,user,mail_subject,mail_template):
     from_email = settings.DEFAULT_FROM_EMAIL
     current_site = get_current_site(request)
-    mail_subject = "Please active you account"
-    messege = render_to_string("user_accounts/emails/account_verfy_email.html",{
+    # mail_subject = "Please active you account"
+    messege = render_to_string(mail_template,{
         'user' :user,
         'domain' : current_site,
         "uid" : urlsafe_base64_encode(force_bytes(user.pk)),
