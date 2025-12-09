@@ -1,0 +1,9 @@
+{% autoescape off %}
+Hi {{ user.firts_name }},
+
+{% if is_approved %}
+congratualtion your restaurant is approved by our team 
+{% else %}
+we're  sorry you are nor eligible for publishing your menu on your marketplace
+{% endif %}
+{% endautoescape %}

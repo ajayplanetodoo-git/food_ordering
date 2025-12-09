@@ -233,15 +233,16 @@ def reset_password_validate(request,uiddb64,token):
         messages.error(request,'This link hase be expired')
         return redirect('myaccount')
 
-def reset_password(request):
-
+def reset_password(request):    
     if request.method == "POST":
         password = request.POST['password']
         confirm_password = request.POST['confirm_password']
+
         if password == confirm_password:
             uid = request.session.get('uid')
             user = User.objects.get(pk=uid)
             user.set_password(password)
+            user.is_active = True
             user.save()
             messages.success("Password is succesfully change")
             return redirect('login')
