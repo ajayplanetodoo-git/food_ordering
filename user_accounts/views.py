@@ -244,7 +244,7 @@ def reset_password(request):
             user.set_password(password)
             user.is_active = True
             user.save()
-            messages.success("Password is succesfully change")
+            messages.success(request,"Password is succesfully change")
             return redirect('login')
 
         else:
