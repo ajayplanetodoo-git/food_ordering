@@ -2,7 +2,8 @@ from django.shortcuts import render , redirect
 from django.http import HttpResponse
 from .forms import Userform
 from vendor_app.forms import Vendorform
-from .models import User , UserProfile
+from .models import User , UserProfile 
+from vendor_app.models import Vendor
 from django.contrib import messages , auth
 from .utils import detectuser , send_varification_link 
 from django.contrib.auth.decorators import login_required , user_passes_test
@@ -192,7 +193,11 @@ def custmerdashboard(request):
 @login_required(login_url='login')
 @user_passes_test(check_roles_vendor)
 def vendordashboard(request):
-    return render(request,"user_accounts/vendashboard.html")
+    vendor = Vendor.objects.get(user=request.user)
+    context = {
+        'vendor':vendor
+    }
+    return render(request,"user_accounts/vendashboard.html",context)
 
 def logout(request):
     auth.logout(request)
