@@ -193,11 +193,7 @@ def custmerdashboard(request):
 @login_required(login_url='login')
 @user_passes_test(check_roles_vendor)
 def vendordashboard(request):
-    vendor = Vendor.objects.get(user=request.user)
-    context = {
-        'vendor':vendor
-    }
-    return render(request,"user_accounts/vendashboard.html",context)
+    return render(request,"user_accounts/vendashboard.html")
 
 def logout(request):
     auth.logout(request)
