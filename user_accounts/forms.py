@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User ,UserProfile
 from django.contrib.auth import get_user_model
 
 class Userform(forms.ModelForm):
@@ -35,3 +35,8 @@ class Userform(forms.ModelForm):
     #      return email
 
     
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = "__all__"
+        exclude = ("user",)

@@ -12,3 +12,10 @@
     animation: show-toast 5s ease forwards;
     animation-timing-function: ease-in-out;
 }
+
+
+.btn.btn-info{
+    padding : 2px  1.75em;
+    font-size: 12px;
+    cursor: pointer;
+}
