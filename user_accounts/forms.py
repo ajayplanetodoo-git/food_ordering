@@ -1,6 +1,7 @@
 from django import forms
 from .models import User ,UserProfile
 from django.contrib.auth import get_user_model
+from .validator import img_field_validation
 
 class Userform(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -36,7 +37,11 @@ class Userform(forms.ModelForm):
 
     
 class UserProfileForm(forms.ModelForm):
+    profile_picture = forms.FileField(widget=forms.FileInput(attrs={'class':'btn-btn-info'}),validators=[img_field_validation])
+    cover_picture = forms.FileField(widget=forms.FileInput(attrs={'class':'btn-btn-info'}),validators=[img_field_validation])
+
     class Meta:
         model = UserProfile
         fields = "__all__"
         exclude = ("user",)
+
