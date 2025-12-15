@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'user_accounts.context_processors.get_vendor',
+                'user_accounts.context_processors.get_google_api',
             ],
         },
     },
@@ -151,3 +152,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
 # EMAIL_USE_TLS = True
 # DEFAULT_FIELD_EMAIL = f"Foodonline Marketplace <ajay.planetodoo@gmail.com>"
+
+GOOGLE_API_KEY = 'AIzaSyCTREsXKz3pa8Z4f8kCj9YANYRCf5enkaE'
