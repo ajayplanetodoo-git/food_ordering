@@ -16,7 +16,7 @@ from django.contrib.auth.tokens import default_token_generator
 
 
 def registeruser(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated: # if user have allready loin it not accce again login pg thsi is authentication
         messages.warning(request,"You are already looged in!")
         return redirect("myaccount")
     elif request.method=="POST":
@@ -119,7 +119,7 @@ def registervendor(request):
 
 
 def activate(request,uiddb64, token):
-    #activate the user by setting the is_active status true
+    #activate the user by setting the is_active status true  after clicking on email link
     try:
         uid= urlsafe_base64_decode(uiddb64).decode()
         user = User._default_manager.get(pk=uid)
@@ -134,7 +134,6 @@ def activate(request,uiddb64, token):
     else:
         messages.error(request,"Invalid activation link")
         return redirect('myaccount')
-
 
     return
 def login(request):
@@ -188,7 +187,12 @@ def myaccount(request):
 @login_required(login_url='login')
 @user_passes_test(check_roles_customer)
 def custmerdashboard(request):
-    return render(request,"user_accounts/custdashboard.html")
+    user = request.user
+    print(user)
+    context = {
+        'user':user
+    }
+    return render(request,"user_accounts/custdashboard.html",context)
 
 @login_required(login_url='login')
 @user_passes_test(check_roles_vendor)

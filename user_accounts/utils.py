@@ -21,11 +21,14 @@ def detectuser(user):
         redirectUrl = "/admin"
         return redirectUrl
 
-
+    '''
+    blow function used in tow way once user or vendor create send mail for activating user and when any one want to change 
+    pasword then it also used
+    '''
 #     This function send vefication email
 def send_varification_link(request,user,mail_subject,mail_template):
-    from_email = settings.DEFAULT_FROM_EMAIL
-    current_site = get_current_site(request)
+    from_email = settings.DEFAULT_FROM_EMAIL  # this will take email from .env metionded email
+    current_site = get_current_site(request) # there it will take current site like http/8000  ect
     # mail_subject = "Please active you account"    
     messege = render_to_string(mail_template,{
         'user' :user,
@@ -37,6 +40,10 @@ def send_varification_link(request,user,mail_subject,mail_template):
     mail = EmailMessage(mail_subject,messege, from_email,to=[to_email])
     mail.send()
 
+    '''
+    this function used for only send notifaication email when admin check is approved flag in vendor app from panal  
+    apart from this it hot used in any case
+    '''
 def send_notification(mail_subject,mail_template,context):
     from_email = settings.DEFAULT_FROM_EMAIL
     messeage = render_to_string(mail_template,context)
