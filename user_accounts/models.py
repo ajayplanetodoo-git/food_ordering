@@ -78,13 +78,19 @@ class User(AbstractBaseUser):
     objects = UserManeger()
     def __str__(self):
         return self.email
-
-    def has_perm(self,perms, obj=None):
+    def has_perm(self,perms, obj=None): # only admin user which create from super iuser will have permition to login admin panale
         return self.is_admin
 
-    def has_module_perms(self,app_lable):
+    def has_module_perms(self,app_label): # becouse of this function user can see all model or app in admin panel
         return True
-    
+
+    '''
+    For templates ({{ user.get_role }})
+    For dashboard logic
+    For permission logic
+    For showing user type
+    '''
+
     def get_role(self):
         if self.role == 1:
             user_role = "Vendor"
