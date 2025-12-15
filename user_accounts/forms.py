@@ -37,9 +37,11 @@ class Userform(forms.ModelForm):
 
     
 class UserProfileForm(forms.ModelForm):
+    address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Start typing...','required':'required'}))
     profile_picture = forms.FileField(widget=forms.FileInput(attrs={'class':'btn-btn-info'}),validators=[img_field_validation])
     cover_picture = forms.FileField(widget=forms.FileInput(attrs={'class':'btn-btn-info'}),validators=[img_field_validation])
-
+    latitude = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
     class Meta:
         model = UserProfile
         fields = "__all__"
