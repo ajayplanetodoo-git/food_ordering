@@ -6,7 +6,7 @@ from .models import Vendor
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required , user_passes_test
 from user_accounts.views import check_roles_vendor
-from menu.models import Category
+from menu.models import Category ,FoodIteam
 
 
 # Create your views here.
@@ -48,3 +48,11 @@ def menu_builder(request):
         'categories': categories,
     }
     return render(request,'vendor/menu_builder.html',context)
+
+def fooditeams_by_category(request,pk=None):
+    vendor = Vendor.objects.get(user=request.user)
+    category = get_object_or_404(Category,pk=pk)
+    fooditems = FoodIteam.objects.filter(vendor=vendor,category=category)
+    print(fooditems)
+
+    return render(request,'vendor/fooditeams_by_category.html')
