@@ -6,6 +6,7 @@ from .models import Vendor
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required , user_passes_test
 from user_accounts.views import check_roles_vendor
+from menu.models import Category
 
 
 # Create your views here.
@@ -41,4 +42,9 @@ def vprofile(request):
     return render(request,'vendor/vprofile.html',context)
 
 def menu_builder(request):
-    return render(request,'vendor/menu_builder.html')
+    vendor = Vendor.objects.get(user=request.user)
+    categories = Category.objects.filter(vendor=vendor)
+    context = {
+        'categories': categories,
+    }
+    return render(request,'vendor/menu_builder.html',context)
