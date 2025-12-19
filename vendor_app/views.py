@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404,redirect
-from .forms import Vendorform 
+from .forms import Vendorform
+from menu.forms import Category_form
 from user_accounts.forms import UserProfileForm
 from user_accounts.models import UserProfile , User
 from .models import Vendor
@@ -7,9 +8,19 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required , user_passes_test
 from user_accounts.views import check_roles_vendor
 from menu.models import Category ,FoodIteam
+from django.template.defaultfilters import slugify
 
 
 # Create your views here.
+'''
+this is help function insted of writting     vendor = Vendor.objects.get(user=request.user)
+we make this help unction to get vendor
+'''
+
+def get_vendor(request):
+    vendor = Vendor.objects.get(user=request.user)
+    return vendor
+
 
 @login_required(login_url='login')
 @user_passes_test(check_roles_vendor)
@@ -41,6 +52,8 @@ def vprofile(request):
     }
     return render(request,'vendor/vprofile.html',context)
 
+@login_required(login_url='login')
+@user_passes_test(check_roles_vendor)
 def menu_builder(request):
     vendor = Vendor.objects.get(user=request.user)
     categories = Category.objects.filter(vendor=vendor)
@@ -48,11 +61,38 @@ def menu_builder(request):
         'categories': categories,
     }
     return render(request,'vendor/menu_builder.html',context)
-
+@login_required(login_url='login')
+@user_passes_test(check_roles_vendor)
 def fooditeams_by_category(request,pk=None):
-    vendor = Vendor.objects.get(user=request.user)
+    vendor = get_vendor(request) # we can useed both     vendor = Vendor.objects.get(user=request.user)   or helper function get_vendor
     category = get_object_or_404(Category,pk=pk)
     fooditems = FoodIteam.objects.filter(vendor=vendor,category=category)
+    print(category)
     print(fooditems)
+    contxet = {
+        'category':category,
+        'fooditeam':fooditems
+    }
 
-    return render(request,'vendor/fooditeams_by_category.html')
+    return render(request,'vendor/fooditeams_by_category.html',contxet)
+
+def add_category(request,pk=None):
+    vendor = get_vendor(request)
+    if request.method=="POST":
+        categ_from = Category_form(request.POST)
+        if categ_from.is_valid():
+            category_name=categ_from.cleaned_data['category_name']
+            category = categ_from.save(commit=False)
+            category.vendor=vendor
+            category.slug = slugify(category_name)
+            categ_from.save()
+            messages.success(request,"Category added ")
+            return redirect('menubuilder')
+        else:
+            print(messages.error)
+    else:
+        categ_from = Category_form()
+    context={
+        "form":categ_from,
+    }
+    return render(request,'vendor/add_category.html',context)
