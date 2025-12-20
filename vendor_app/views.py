@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from .forms import Vendorform
-from menu.forms import Category_form
+from menu.forms import Category_form ,FoodIteam_form
 from user_accounts.forms import UserProfileForm
 from user_accounts.models import UserProfile , User
 from .models import Vendor
@@ -76,8 +76,10 @@ def fooditeams_by_category(request,pk=None):
     }
 
     return render(request,'vendor/fooditeams_by_category.html',contxet)
-
-def add_category(request,pk=None):
+'''
+category Curd opertaions
+'''
+def add_category(request):
     vendor = get_vendor(request)
     print(vendor)
     if request.method=="POST":
@@ -135,3 +137,33 @@ def delete_category(request,pk=None):
     return redirect('menubuilder')
 
 
+'''
+Fooditeams curd operations
+'''
+def add_fooditeam(request):
+    vendor=get_vendor(request)
+    if request.method=="POST":
+        fooditeam_form = FoodIteam_form(request.POST)
+        if fooditeam_form.is_valid():
+            foodtitle=fooditeam_form.cleaned_data['food_title']
+            food = fooditeam_form.save(commit=False)
+            food.vendor=vendor
+            food.slug = slugify(foodtitle)
+            fooditeam_form.save()
+            messages.success(request,"FoodItem added ")
+            return redirect('fooditems_by_category')
+        else:
+            print(fooditeam_form.errors)
+    else:
+        fooditeam_form = FoodIteam_form()
+    context = {
+        'foodform':fooditeam_form
+    }
+
+    return render(request,'vendor/add_fooditeam.html',context)
+
+def edit_fooditeam(request):
+    pass
+
+def delete_fooditeam(request):
+    pass
