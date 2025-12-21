@@ -143,15 +143,15 @@ Fooditeams curd operations
 def add_fooditeam(request):
     vendor=get_vendor(request)
     if request.method=="POST":
-        fooditeam_form = FoodIteam_form(request.POST)
+        fooditeam_form = FoodIteam_form(request.POST,request.FILES)
         if fooditeam_form.is_valid():
             foodtitle=fooditeam_form.cleaned_data['food_title']
             food = fooditeam_form.save(commit=False)
             food.vendor=vendor
             food.slug = slugify(foodtitle)
-            fooditeam_form.save()
+            food.save()
             messages.success(request,"FoodItem added ")
-            return redirect('fooditems_by_category')
+            return redirect('fooditems_by_category',food.category.id)
         else:
             print(fooditeam_form.errors)
     else:

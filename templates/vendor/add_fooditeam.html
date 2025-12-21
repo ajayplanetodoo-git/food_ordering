@@ -19,7 +19,7 @@
                             <hr>
                             <h6>Add New Food Items</h6>
 <!--                            Render form-->
-                                <form action="{% url 'add_category' %}" method="POST">
+                                <form action="{% url 'add_fooditeam' %}" method="POST" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="row">
                                         <div class="form-fields-set">
