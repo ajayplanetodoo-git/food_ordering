@@ -79,6 +79,8 @@ def fooditeams_by_category(request,pk=None):
 '''
 category Curd opertaions
 '''
+@login_required(login_url='login')
+@user_passes_test(check_roles_vendor)
 def add_category(request):
     vendor = get_vendor(request)
     print(vendor)
@@ -102,7 +104,8 @@ def add_category(request):
     return render(request,'vendor/add_category.html',context)
 
 
-
+@login_required(login_url='login')
+@user_passes_test(check_roles_vendor)
 def edit_category(request,pk=None):
     vendor = Vendor.objects.get(user=request.user)
     category = get_object_or_404(Category,pk=pk)
@@ -129,7 +132,8 @@ def edit_category(request,pk=None):
     
     return render(request,'vendor/edit_category.html',context)
 
-
+@login_required(login_url='login')
+@user_passes_test(check_roles_vendor)
 def delete_category(request,pk=None):
     category = get_object_or_404(Category,pk=pk)
     category.delete()
@@ -140,6 +144,8 @@ def delete_category(request,pk=None):
 '''
 Fooditeams curd operations
 '''
+@login_required(login_url='login')
+@user_passes_test(check_roles_vendor)
 def add_fooditeam(request):
     vendor=get_vendor(request)
     if request.method=="POST":
@@ -162,8 +168,33 @@ def add_fooditeam(request):
 
     return render(request,'vendor/add_fooditeam.html',context)
 
-def edit_fooditeam(request):
-    pass
+@login_required(login_url='login')
+@user_passes_test(check_roles_vendor)
+def edit_fooditeam(request,pk=None):
+    vendor = Vendor.objects.get(user=request.user)
+    food = get_object_or_404(FoodIteam,pk=pk)
+    print(vendor)
+    print(food)
+    if request.method=="POST":
+        food_from = FoodIteam_form(request.POST,request.FILES,instance=food)
+        if food_from.is_valid():
+            food_title=food_from.cleaned_data['food_title']
+            food = food_from.save(commit=False)
+            food.vendor=vendor
+            food_title.slug = slugify(food_title)
+            food.save()
+            messages.success(request,"Food Iteam Updated ")
+            return redirect('fooditems_by_category',food.category.id)
+        else:
+            print(messages.error)
+    else:
+        food_from = Category_form(instance=food)
+    context={
+        "foodform":food_from,
+        'food':food,
+    }
+    
+    return render(request,'vendor/edit_fooditeam.html',context)
 
 def delete_fooditeam(request):
     pass
