@@ -162,6 +162,8 @@ def add_fooditeam(request):
             print(fooditeam_form.errors)
     else:
         fooditeam_form = FoodIteam_form()
+        # modify this form 
+        fooditeam_form.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
     context = {
         'foodform':fooditeam_form
     }
@@ -172,7 +174,7 @@ def add_fooditeam(request):
 @user_passes_test(check_roles_vendor)
 def edit_fooditeam(request,pk=None):
     vendor = Vendor.objects.get(user=request.user)
-    food = get_object_or_404(FoodIteam,pk=pk)
+    food = get_object_or_404(FoodIteam,pk=pk,vendor=vendor)
     print(vendor)
     print(food)
     if request.method=="POST":
@@ -181,14 +183,16 @@ def edit_fooditeam(request,pk=None):
             food_title=food_from.cleaned_data['food_title']
             food = food_from.save(commit=False)
             food.vendor=vendor
-            food_title.slug = slugify(food_title)
+            food.slug = slugify(food_title)
             food.save()
             messages.success(request,"Food Iteam Updated ")
             return redirect('fooditems_by_category',food.category.id)
         else:
             print(messages.error)
     else:
-        food_from = Category_form(instance=food)
+        food_from = FoodIteam_form(instance=food)
+        food_from.fields['category'].queryset = Category.objects.filter(vendor=get_vendor(request))
+
     context={
         "foodform":food_from,
         'food':food,
@@ -196,5 +200,8 @@ def edit_fooditeam(request,pk=None):
     
     return render(request,'vendor/edit_fooditeam.html',context)
 
-def delete_fooditeam(request):
-    pass
+def delete_fooditeam(request,pk=None):
+    food = get_object_or_404(FoodIteam,pk=pk)
+    food.delete()
+    messages.success(request," The category is delete successfully")
+    return redirect('fooditems_by_category',food.category.id)

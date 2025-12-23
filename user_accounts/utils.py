@@ -19,13 +19,14 @@ def detectuser(user):
         return redirectUrl
     elif user.role == None:
         redirectUrl = "/admin"
-        return redirectUrl
+        return redirectUrl  
 
     '''
     blow function used in tow way once user or vendor create send mail for activating user and when any one want to change 
     pasword then it also used
     '''
-#     This function send vefication email
+#     This function send vefication email 
+# try this from celery and rabit
 def send_varification_link(request,user,mail_subject,mail_template):
     from_email = settings.DEFAULT_FROM_EMAIL  # this will take email from .env metionded email
     current_site = get_current_site(request) # there it will take current site like http/8000  ect
