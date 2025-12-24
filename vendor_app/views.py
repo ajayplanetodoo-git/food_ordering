@@ -200,6 +200,8 @@ def edit_fooditeam(request,pk=None):
     
     return render(request,'vendor/edit_fooditeam.html',context)
 
+@login_required(login_url='login')
+@user_passes_test(check_roles_vendor)
 def delete_fooditeam(request,pk=None):
     food = get_object_or_404(FoodIteam,pk=pk)
     food.delete()

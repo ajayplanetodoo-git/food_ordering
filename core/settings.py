@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'user_accounts',
     'vendor_app',
     'menu',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+# ?celery config
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = 'django-db'
+
 
 ROOT_URLCONF = 'core.urls'
 
@@ -148,11 +155,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # email configraion
-# EMAIL_HOST=config("EMAIL_HOST")
-# EMAIL_PORT=config("EMAIL_PORT",cast=int)
-# EMAIL_HOST_USER=config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
-# EMAIL_USE_TLS = True
-# DEFAULT_FIELD_EMAIL = f"Foodonline Marketplace <ajay.planetodoo@gmail.com>"
+EMAIL_HOST=config("EMAIL_HOST")
+EMAIL_PORT=config("EMAIL_PORT",cast=int)
+EMAIL_HOST_USER=config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+DEFAULT_FIELD_EMAIL = f"Foodonline Marketplace <ajay.planetodoo@gmail.com>"
 
 GOOGLE_API_KEY = 'AIzaSyCTREsXKz3pa8Z4f8kCj9YANYRCf5enkaE'
