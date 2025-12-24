@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'vendor_app',
     'menu',
     'django_celery_results',
-]
+    'marketplace',]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -163,3 +163,5 @@ EMAIL_USE_TLS = True
 DEFAULT_FIELD_EMAIL = f"Foodonline Marketplace <ajay.planetodoo@gmail.com>"
 
 GOOGLE_API_KEY = 'AIzaSyCTREsXKz3pa8Z4f8kCj9YANYRCf5enkaE'
+
+

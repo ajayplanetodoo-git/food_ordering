@@ -24,7 +24,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.home , name="home"),
     path(" ", include("user_accounts.urls")),
-    path("vendor/",include("vendor_app.urls"))
+    path("vendor/",include("vendor_app.urls")),
+    path('marketplace/',include('marketplace.urls')),
+
+
+
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
