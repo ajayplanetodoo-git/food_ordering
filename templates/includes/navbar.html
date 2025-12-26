@@ -27,11 +27,21 @@
 							</div>
 							<div class="col-lg-4 col-md-4 col-sm-12 d-flex justify-content-end">
 								<div class="login-option d-flex align-items-center flex-nowrap gap-2">
+									{% if user.is_authenticated %}
+									<a href="">
+										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="color: red; " width="10px" class="bi bi-cart-fill" viewBox="0 0 16 16">
+											<path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+										<span class="badge badge-warning" id="cart_counter" style="border-radius:50px; position:relative; bottom:10px; left:-5px;">{{ cart_count }}</span>
+										</svg>
+									</a>
+									{% endif %}
+
+
 									<a class="btn btn-outline-danger btn-sm text-uppercase font-weight-bold"
 									 href="{% url 'marketplace' %}">MarketPlace</a>
 
 									{% if user.is_authenticated %}
-										<a class="btn btn-outline-info btn-sm text-uppercase font-weight-bold" data-target="#sign-in"  href="{% url 'myaccount' %}">My Profile </a>
+										<a class="btn btn-outline-info btn-sm text-uppercase font-weight-bold" data-target="#sign-in"  href="{% url 'myaccount' %}">My Account </a>
 										<a class="btn btn-sm-outline-danger btn-sm text-uppercase font-weight-bold" style="color: red;" data-target="#sign-in"  href="{% url 'logout' %}">Logout </a>
 									{% else %}
 										<a class="btn btn-sm font-weight-bold" style="color: black;" data-target="#sign-in"  href="{% url 'login' %}">Login </a>/

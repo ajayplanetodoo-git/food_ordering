@@ -68,25 +68,33 @@ function onPlaceChanged (){
     }
 }
 
+//  this function work for addinge product in cart without refress
 $(document).ready(function(){
     $('.add_to_cart').on('click',function(e){
         e.preventDefault();
         
-        food_id = $(this).attr('data-id');
-        url = $(this).attr('data-url');
+        // food_id = $(this).attr('data-id');
+        let url = $(this).data('url');
 
-        data = {
-            food_id : food_id,
-        }
+        // data = {
+        //     food_id : food_id,
+        // }
         
         $.ajax({
             type:'GET',
             url : url,
-            data : data,
+            // data : data,
             success : function(response){
-                alert(response)
+                console.log(response)
             }
         })
 
+        // place the cart quanity on load
+        // $('.iteam_qty').each(function(){
+        //     var the_id=$(this).attr('id')
+        //     var qty = $(this).attr('data-qty')
+        //     $('#'+the_id).html(qty)
+        // })
+
     })
-})
+})  

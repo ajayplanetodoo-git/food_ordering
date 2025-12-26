@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from vendor_app.models import Vendor
 from menu.models import Category, FoodIteam
 from django.db.models import Prefetch
-from django.http import HttpResponse
+from django.http import HttpResponse , JsonResponse
+from marketplace.models import Cart
 
 def marketplace(request):
     vendor = Vendor.objects.filter(is_approved=True,user__is_active=True)[:8]
@@ -23,12 +24,37 @@ def vendor_details(request,vendor_slug):
             queryset=FoodIteam.objects.filter(is_available=True)
         )
     )
+
+    if request.user.is_authenticated:
+        cart_iteams = Cart.objects.filter(user=request.user)
+    else:
+        cart_iteams = Cart.objects.none() 
     context = {
         'vendor':vendor,
         'category': categoy,
+        'cart_iteams' : cart_iteams,
     }
     return render(request,'marketplace/vendor_details.html',context)
 
 def add_to_cart(request,food_id):
-    return  HttpResponse(food_id)
-
+    if request.user.is_authenticated:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            # check if the food iteam exists
+            try:
+                fooditeam = FoodIteam.objects.get(id=food_id)
+                # check if user already added that food to cart
+                try: 
+                    chkcart = Cart.objects.get(user=request.user , fooditeam=fooditeam)
+                    # increase cart quntity
+                    chkcart.quantity+=1
+                    chkcart.save()
+                    return JsonResponse({"status":'Success','message':'Increased the cart quanitiy'})
+                except :
+                    chkcart = Cart.objects.create(user=request.user , fooditeam=fooditeam, quantity=1)
+                    return JsonResponse({'status':'success','message':"Added the food to cart"})
+            except:
+                return JsonResponse({'failed':'success','message':'This food doesnot exist'})
+        else:        
+            return JsonResponse({'status':'failed','message':'invalid request'})
+    else:
+        return  JsonResponse({'status':'failed','message':'Please login to continue'})
