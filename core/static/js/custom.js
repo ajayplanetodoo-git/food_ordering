@@ -70,31 +70,42 @@ function onPlaceChanged (){
 
 //  this function work for addinge product in cart without refress
 $(document).ready(function(){
+// real time show qty increamwnt and cart no 
     $('.add_to_cart').on('click',function(e){
         e.preventDefault();
         
-        // food_id = $(this).attr('data-id');
         let url = $(this).data('url');
-
-        // data = {
-        //     food_id : food_id,
-        // }
-        
+       
         $.ajax({
             type:'GET',
             url : url,
             // data : data,
             success : function(response){
                 console.log(response)
+                $('#cart_counter').html(response.cart_counter['cart_count'])
+                $('#qty-'+response.food_id).html(response.qty)
             }
         })
 
-        // place the cart quanity on load
-        // $('.iteam_qty').each(function(){
-        //     var the_id=$(this).attr('id')
-        //     var qty = $(this).attr('data-qty')
-        //     $('#'+the_id).html(qty)
-        // })
+      
+    })
+// decrease cart and other things
+    $('.decrease_cart').on('click',function(e){
+        e.preventDefault();
+        
+        let url = $(this).data('url');
+       
+        $.ajax({
+            type:'GET',
+            url : url,
+            // data : data,
+            success : function(response){
+                console.log(response)
+                $('#cart_counter').html(response.cart_counter['cart_count'])
+                $('#qty-'+response.food_id).html(response.qty)
+            }
+        })
 
+      
     })
 })  
