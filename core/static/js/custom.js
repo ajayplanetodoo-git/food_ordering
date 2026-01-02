@@ -109,3 +109,33 @@ $(document).ready(function(){
       
     })
 })  
+
+$(document).on('click', '.delete_cart', function (e) {
+    e.preventDefault();
+
+    let url = $(this).data('url');
+    let cartId = $(this).data('id');
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        success: function (response) {
+
+            if (response.status === 'success') {
+
+                // Remove cart row instantly
+                $('#cart-row-' + cartId).fadeOut(300, function () {
+                    $(this).remove();
+                });
+
+                // Update cart counter
+                $('#cart_counter').html(response.cart_counter.cart_count);
+
+                // Empty cart check
+                if (response.cart_counter.cart_count === 0) {
+                    $('.cart-list').html('<h5>Cart is empty</h5>');
+                }
+            }
+        }
+    });
+});

@@ -18,50 +18,71 @@
 									<div class="tab-content">
 										<div id="home" class="tab-pane in active">
 											<div class="menu-itam-holder">
-												
-												<div id="menu-item-list-6272" class="menu-itam-list">
-													
+											<div id="menu-item-list-6272" class="menu-itam-list">
 
-													  {% for  catg in category %}
-													<div class="element-title" id="menu-category-2">
-														<h5 class="text-color">{{catg}}</h5>
-														<span>{{catg.description}}</span>
-													</div>
-													<ul>
-                                                        {% for food in catg.fooditeams.all %}
-														<li>
-															<div class="image-holder"><img src="{{food.image.url}}" alt=""></a></div>
-															<div class="text-holder">
-																<h6>{{ food }}</h6>
-																<span>{{ food.description }}</span>
+												{% if cart %}
+												<ul class="list-unstyled">
+
+													<!-- HEADER -->
+													<li class="border-bottom py-2 font-weight-bold">
+														<div class="row text-center">
+															<div class="col-2">Image</div>
+															<div class="col-5 text-left">Item</div>
+															<div class="col-2">Qty</div>
+															<div class="col-3 text-right">Price</div>
+														</div>
+													</li>
+
+													{% for cart_itm in cart %}
+													<li class="border-bottom py-3 cart-row" id="cart-row-{{ cart_itm.id }}">
+														<div class="row align-items-center text-center">
+
+															<!-- IMAGE -->
+															<div class="col-2">
+																<img src="{{ cart_itm.fooditeam.image.url }}"
+																	class="img-fluid rounded"
+																	style="max-width:60px;">
 															</div>
-															<div class="price-holder">
-																<span class="price">Rs {{ food.price }}</span>
-																<a href="#" style="margin-right: 28px ;" class="add_to_cart"
-																 data-url="{% url 'add_to_cart' food.id %}" data-id="{{food.id}}">
-																 <i class="icon-plus4 text-color"></i></a>
 
-                                                                <label id="qty-{{food.id}}">
-																	{% for item in cart_iteams %}
-																	{% if item.fooditeam.id == food.id %}
-																		{{ item.quantity }}
-																	{% endif %}
-																{% empty %}
-																	0
-																{% endfor %}</label>
-																<a href="#" class="decrease_cart" data-url="{% url 'decrease_cart' food.id %}"
-																 data-id="{{food.id}}">
-																	<i class="icon-minus text-color"></i></a>
+															<!-- ITEM -->
+															<div class="col-5 text-left">
+																<h6 class="mb-1">{{ cart_itm.fooditeam }}</h6>
+																<a href="{% url 'vendor_details' cart_itm.fooditeam.vendor.vendor_slug %}" class="badge badge-warning">{{ cart_itm.fooditeam.vendor }}</a>
+																<br>
+																<small class="text-muted">
+																	{{ cart_itm.fooditeam.description }}
+																</small>
+															</div>
+
+															<!-- QTY -->
+															<div class="col-2 font-weight-bold">
+																{{ cart_itm.quantity }}
+															</div>
+
+															<!-- PRICE -->
+															<div class="col-3 text-right font-weight-bold">
+																Rs {{ cart_itm.fooditeam.price }}
+																<a href="#" class="delete_cart" 
+																data-id="{{cart_itm.id}}"
+																 data-url="{% url 'delete_cart'  cart_itm.id %}" >
+																<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-trash3" viewBox="0 0 16 16">
+																<path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+																</svg>
+																</a>
+															</div>
 																
-															</div>
-														</li>
-                                                        {% endfor %}
-													</ul>	
-                                                    {% endfor %}
-													
-												</div>
-												
+
+														</div>
+														
+													</li>
+													{% endfor %}
+												</ul>
+												{% else %}
+													<h5>Cart is empty</h5>
+												{% endif %}
+
 											</div>
+										</div>
 										</div>
 										
 									</div>
@@ -84,23 +105,26 @@
                                                     <ul>
                                                         <li style="list-style-type: none;">
                                                             Subtotal
-                                                            <span class="price float-right"> </span>
+                                                            <span class="price float-right"> 
                                                                 <span class="currency" >$ </span>
-                                                                <span id="subtotal" >0</span>
+                                                                <span id="subtotal" >{{total}}</span>
+															</span>
                                                         </li>
 
                                                         <li style="list-style-type: none;">
                                                             Tax
-                                                             <span class="price float-right"> </span>
+                                                             <span class="price float-right"> 
                                                                 <span class="currency" >$ </span>
                                                                 <span id="tax" >0</span>
+															</span>
                                                         </li>
 
                                                         <li style="list-style-type: none; font-weight: 600;">
                                                             Total
-                                                            <span class="price float-right" > </span>
+                                                            <span class="price float-right" > 
                                                                 <span class="currency" >$ </span>
                                                                 <span id="total" >0</span>
+															</span>
                                                         </li>
                                                     </ul>
                                                 </div>
