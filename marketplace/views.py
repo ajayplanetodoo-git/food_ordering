@@ -97,14 +97,14 @@ def decrease_cart(request,food_id):
 @login_required(login_url='login')
 def cart(request):
     cart_iteams = Cart.objects.filter(user=request.user).order_by('updated_at')
-    sub_total=0
-    for rec in cart_iteams:
-        price = rec.quantity* rec.fooditeam.price
-        sub_total+=price
+    # sub_total=0
+    # for rec in cart_iteams:
+    #     price = rec.quantity* rec.fooditeam.price
+    #     sub_total+=price
 
     context = {
         'cart':cart_iteams,
-        'total':sub_total,
+        # 'total':sub_total,
     }
     return render(request , 'marketplace/cart.html',context)
 
@@ -117,7 +117,7 @@ def delete_cart(request,cart_id):
                 cart_iteam = Cart.objects.get(user=request.user, id=cart_id)
                 if cart_iteam:
                     cart_iteam.delete()
-                    return JsonResponse({'status':'Success','message':'Cart item has been deleted!', 
+                    return JsonResponse({'status':'success','message':'Cart item has been deleted!', 
                                          'cart_counter':{'cart_count':get_cart_counter(request)}
                                          
                                          })
