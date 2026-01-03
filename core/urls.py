@@ -28,6 +28,8 @@ urlpatterns = [
     path("vendor/",include("vendor_app.urls")),
     path('marketplace/',include('marketplace.urls')),
     path('cart/',marketplaceViews.cart, name='cart'),
+    # Search 
+    path('search/',marketplaceViews.search, name='search'),
 
 
 
