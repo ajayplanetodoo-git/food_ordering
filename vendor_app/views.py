@@ -90,8 +90,9 @@ def add_category(request):
             category_name=categ_from.cleaned_data['category_name']
             category = categ_from.save(commit=False)
             category.vendor=vendor
-            category.slug = slugify(category_name)
-            categ_from.save()
+            category.save() # here the cateogry id will be genrated 
+            category.slug = slugify(category_name)+'-'+str(category.id) # chickrn-15
+            category.save()
             messages.success(request,"Category added ")
             return redirect('menubuilder')
         else:

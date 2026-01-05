@@ -6,6 +6,7 @@ from django.http import HttpResponse , JsonResponse
 from marketplace.models import Cart
 from .context_processors import get_cart_counter
 from django.contrib.auth.decorators import login_required , user_passes_test
+from django.db.models import Q
 
 
 def marketplace(request):
@@ -128,5 +129,21 @@ def delete_cart(request,cart_id):
             return JsonResponse({'status':'failed','message':'invalid request'})
     
 def search(request):
-    return HttpResponse('search Page')
+    address = request.GET['address']
+    latitude = request.GET['lat']
+    longitude = request.GET['lng']
+    radius = request.GET['radius']
+    keyword = request.GET['keyword']
+# get vendor id that has the food item that user looking
+    fetch_vedor_by_fooditem= FoodIteam.objects.filter(food_title__icontains=keyword,is_available=True).values_list('vendor',flat=True)
+    
+    vendor = Vendor.objects.filter(Q(id__in=fetch_vedor_by_fooditem)|  Q(vendor_name__icontains=keyword,is_approved=True))
 
+
+    vendor_count = vendor.count()
+    context ={
+        'vendors' : vendor,
+        'vendor_count':vendor_count,
+    }
+
+    return render(request , 'marketplace/listing.html',context)
