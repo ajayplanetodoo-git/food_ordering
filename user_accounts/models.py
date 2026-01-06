@@ -3,6 +3,9 @@ from django.contrib.auth.models import AbstractBaseUser , BaseUserManager
 
 from django.contrib.auth import get_user_model
 
+from django.contrib.gis.db import models as gismodels
+from django.contrib.gis.geos import Point
+
 # Create your models here.
 '''usermanager cannot create or hold any fields it only contain methods 
 BaseUsermanager check how and what used sholud be created like normaluser or Superuser
@@ -110,12 +113,18 @@ class UserProfile(models.Model):
     pincode = models.CharField(max_length=6,blank=True,null=True)
     latitude = models.CharField(max_length=20,blank=True,null=True)
     longitude = models.CharField(max_length=20,blank=True,null=True)
+    location = gismodels.PointField(blank=True,null=True,srid=4326)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.user.email
 
+    def save(self,*args,**kwargs):
+        if self.latitude and self.longitude:
+            self.location = Point(float(self.longitude), float(self.latitude)) # for point filed alway longitude define 1st and lat define 2nd
+            return super(UserProfile,self).save(*args,**kwargs)
+        return super(UserProfile,self).save(*args,**kwargs)
 
 
 

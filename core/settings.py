@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 # from dotenv import load_dotenv
 import os
+import sys
 # load_dotenv() # for db config
 from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -45,7 +46,9 @@ INSTALLED_APPS = [
     'vendor_app',
     'menu',
     'django_celery_results',
-    'marketplace',]
+    'marketplace',
+    'django.contrib.gis',
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -96,7 +99,8 @@ and bellow setting now app any one can used on multimachines
 '''
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': config("DB_NAME"),
         'USER' : config("DB_USER"),
         "PASSWORD" : config("DB_PASSWORD") ,
@@ -166,4 +170,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 GOOGLE_API_KEY = 'AIzaSyCTREsXKz3pa8Z4f8kCj9YANYRCf5enkaE'
 
-
+#  this setting for locatin base search 
+# --- GDAL & GEOS library paths (cross-platform) ---
+if sys.platform.startswith("win"):
+    GDAL_LIBRARY_PATH = os.environ.get("GDAL_LIBRARY_PATH", r"C:\OSGeo4W\bin\gdalxx.dll")
+    GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH", r"C:\OSGeo4W\bin\geos_c.dll")
+else:
+    GDAL_LIBRARY_PATH = os.environ.get("GDAL_LIBRARY_PATH", "/usr/lib/libgdal.so")
+    GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH", "/lib/x86_64-linux-gnu/libgeos_c.so")

@@ -135,9 +135,11 @@ def search(request):
     radius = request.GET['radius']
     keyword = request.GET['keyword']
 # get vendor id that has the food item that user looking
-    fetch_vedor_by_fooditem= FoodIteam.objects.filter(food_title__icontains=keyword,is_available=True).values_list('vendor',flat=True)
-    
-    vendor = Vendor.objects.filter(Q(id__in=fetch_vedor_by_fooditem)|  Q(vendor_name__icontains=keyword,is_approved=True))
+    fetch_vedor_by_fooditem= FoodIteam.objects.filter(food_title__icontains=keyword,
+                                                      is_available=True).values_list('vendor',flat=True) # value_list used of it return id and 'vendor 
+    # must br pesent in fooditeams flat=true give you simple list like [1,2,3]  
+    vendor = Vendor.objects.filter(Q(id__in=fetch_vedor_by_fooditem) |  
+                                   Q(vendor_name__icontains=keyword,is_approved=True))
 
 
     vendor_count = vendor.count()
