@@ -52,7 +52,12 @@
                                                         {% if vendor.user_profile.address %}
                                                         <spam><small class="text-muted">{{vendor.user_profile.address}}</small></spam>
                                                         {% endif %}
-                                                    </div>
+
+														{% if source_location %}
+														<br>
+														<span><small><b>{{ vendor.kms }}</b>Km away from {{ source_location }}</small></span>	
+														{% endif %}
+													</div>
 													{% if vendor.user_profile.city and vendor.user_profile.state and vendor.user_profile.pincode %}
 												    <span>{{vendor.user_profile.city}},{{vendor.user_profile.state}},{{vendor.user_profile.pincode}}</span>
 												    {% endif %}

@@ -7,7 +7,9 @@ from marketplace.models import Cart
 from .context_processors import get_cart_counter
 from django.contrib.auth.decorators import login_required , user_passes_test
 from django.db.models import Q
-
+from django.contrib.gis.geos import GEOSGeometry
+from django.contrib.gis.measure import D # ``D`` is a shortcut for ``Distance``
+from django.contrib.gis.db.models.functions import Distance
 
 def marketplace(request):
     vendor = Vendor.objects.filter(is_approved=True,user__is_active=True)[:8]
@@ -129,23 +131,38 @@ def delete_cart(request,cart_id):
             return JsonResponse({'status':'failed','message':'invalid request'})
     
 def search(request):
-    address = request.GET['address']
-    latitude = request.GET['lat']
-    longitude = request.GET['lng']
-    radius = request.GET['radius']
-    keyword = request.GET['keyword']
-# get vendor id that has the food item that user looking
-    fetch_vedor_by_fooditem= FoodIteam.objects.filter(food_title__icontains=keyword,
-                                                      is_available=True).values_list('vendor',flat=True) # value_list used of it return id and 'vendor 
-    # must br pesent in fooditeams flat=true give you simple list like [1,2,3]  
-    vendor = Vendor.objects.filter(Q(id__in=fetch_vedor_by_fooditem) |  
-                                   Q(vendor_name__icontains=keyword,is_approved=True))
+    if not 'address' in request.GET:
+        return redirect('marketplace')
+    else:
+        address = request.GET['address']
+        latitude = request.GET['lat']
+        longitude = request.GET['lng']
+        radius = request.GET['radius']
+        keyword = request.GET['keyword']
+    # get vendor id that has the food item that user looking
+        fetch_vedor_by_fooditem= FoodIteam.objects.filter(food_title__icontains=keyword,
+                                                        is_available=True).values_list('vendor',flat=True) # value_list used of it return id and 'vendor 
+        # must br pesent in fooditeams flat=true give you simple list like [1,2,3]  
+        vendor = Vendor.objects.filter(Q(id__in=fetch_vedor_by_fooditem) |  
+                                    Q(vendor_name__icontains=keyword,is_approved=True))
 
+        if latitude and longitude and radius:
+            pnt = GEOSGeometry("POINT(%s %s)" % (longitude,latitude))
 
-    vendor_count = vendor.count()
-    context ={
-        'vendors' : vendor,
-        'vendor_count':vendor_count,
-    }
+            vendor = Vendor.objects.filter(Q(id__in=fetch_vedor_by_fooditem) |  
+                                    Q(vendor_name__icontains=keyword,is_approved=True),
+                                    user_profile__location__distance_lte=(pnt, D(km=radius))
+                                    ).annotate(distance_u=Distance('user_profile__location',pnt)).order_by('distance_u')
+                                    #    distance_u id used difine in annotate 
+            
+            for v in vendor:
+                v.kms = round(v.distance_u.km,1)
 
-    return render(request , 'marketplace/listing.html',context)
+        vendor_count = vendor.count()
+        context ={
+            'vendors' : vendor,
+            'vendor_count':vendor_count,
+            'source_location': address,
+        }
+
+        return render(request , 'marketplace/listing.html',context)
