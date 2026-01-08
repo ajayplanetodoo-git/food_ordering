@@ -17,8 +17,8 @@
 									<ul>
 										<li class="location-has-children choose-location">
 											<form action="#"class="d-flex align-items-center">
-												<input type="text" value="" name="location" placeholder="Enter your delivery location" autocomplete="off">
-												<span id="foodbakery_radius_location_open" class="foodbakery-radius-location"><i class="icon-target5"></i></span>
+												<input type="text" value="" name="location" id="location" placeholder="Your Current Location" autocomplete="off">
+												<span id="foodbakery_radius_location_open" class="foodbakery-radius-location" onclick="getLocation()"><i class="icon-target5"></i></span>
 											</form>
 
 										</li>
@@ -56,3 +56,48 @@
 				</div>
 			</header>
 </div>
+
+<!--  this function for getting current loction using js take from w3school -->
+ <script>
+const x = document.getElementById("location");
+// here we are present after page reload to location dissapears . it will set hold location value even after roalding pg
+var current_location = sessionStorage.getItem('current_location')
+if(current_location != ""){
+	x.value=current_location;
+
+}
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(success, error);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+
+function success(position) {
+	var lat=position.coords.latitude;
+	var long= position.coords.longitude;
+
+	x.value = lat + ','+long
+// hit AJAX request to googlemaps api endpoint and get the location data using above lat long
+	var GOOGLE_API_KEY = '{{ GOOGLE_API_KEY }}'
+	var url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+long+'+&key='+GOOGLE_API_KEY
+
+	$.ajax({
+		url:url,
+		type: 'GET',
+		success : function(response){
+			var current_location = response.results[0].formatted_address
+			x.value = current_location
+			sessionStorage.setItem('current_location',current_location) // here we are storing current location in session so not goes way after reload
+			window.location='?lat='+lat+'&lng='+long
+		}
+	})
+
+}
+
+function error() {
+  alert("Sorry, no position available.");
+}
+</script>

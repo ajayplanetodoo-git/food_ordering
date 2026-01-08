@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 import os
 import sys
 # load_dotenv() # for db config
@@ -159,7 +159,6 @@ MEDIA_ROOT =  BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 # email configraion
 # EMAIL_HOST=config("EMAIL_HOST")
 # EMAIL_PORT=config("EMAIL_PORT",cast=int)
@@ -172,9 +171,13 @@ GOOGLE_API_KEY = 'AIzaSyCTREsXKz3pa8Z4f8kCj9YANYRCf5enkaE'
 
 #  this setting for locatin base search 
 # --- GDAL & GEOS library paths (cross-platform) ---
-if sys.platform.startswith("win"):
+load_dotenv(BASE_DIR / ".env")
+
+if sys.platform.startswith("win"): # this hould be inclued in win .env file for platform indiepdence
     GDAL_LIBRARY_PATH = os.environ.get("GDAL_LIBRARY_PATH", r"C:\OSGeo4W\bin\gdalxx.dll")
     GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH", r"C:\OSGeo4W\bin\geos_c.dll")
 else:
-    GDAL_LIBRARY_PATH = os.environ.get("GDAL_LIBRARY_PATH", "/usr/lib/libgdal.so")
-    GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH", "/lib/x86_64-linux-gnu/libgeos_c.so")
+    # GDAL_LIBRARY_PATH = os.environ.get("GDAL_LIBRARY_PATH", "/usr/lib/libgdal.so")
+    # GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH", "/lib/x86_64-linux-gnu/libgeos_c.so")
+    GDAL_LIBRARY_PATH = os.environ.get("GDAL_LIBRARY_PATH")
+    GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH")
