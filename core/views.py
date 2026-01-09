@@ -6,29 +6,30 @@ from django.contrib.gis.db.models.functions import Distance
 
 from vendor_app.models import Vendor
 
-# def get_or_set_current_location(request):
-#     if 'lat' in request.session:
-#         lat = request.session['lat']
-#         lng = request.session['lng']
-#         return lng,lat
-#     elif 'lat' in request.GET:
-#         lat= request.GET.get('lat')
-#         lng = request.GET.get('lng')
-#         request.session['lat'] = lat
-#         request.session['lng'] = lng
-#         return lng,lat
-#     else:
-#         return None
+def get_or_set_current_location(request): #  already user have olocation
+    if 'lat' in request.session:
+        lat = request.session['lat']
+        lng = request.session['lng']
+        return lng,lat
+    elif 'lat' in request.GET: # this section run when user 1st time open and pass location then it take from url and set to session
+        lat= request.GET.get('lat')
+        lng = request.GET.get('lng')
+        request.session['lat'] = lat
+        request.session['lng'] = lng
+        return lng,lat
+    else:
+        return None
 
 
 
 
 def home(request):
-    if 'lat' in request.GET:
-        lat= request.GET.get('lat')
-        lng = request.GET.get('lng')
-
-        pnt = GEOSGeometry("POINT(%s %s)" % (lng,lat))
+    if get_or_set_current_location(request)is not None: 
+      
+        #  whenever we are passing location to  POINT  alway pass 
+        # longitude 1st then pass lattitude it's pre define like (lng,lat) 
+        pnt = GEOSGeometry("POINT(%s %s)" % (get_or_set_current_location(request)))
+        
 
         vendor = Vendor.objects.filter(
                                 user_profile__location__distance_lte=(pnt, D(km=30))
