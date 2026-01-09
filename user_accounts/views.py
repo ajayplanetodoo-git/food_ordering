@@ -1,10 +1,12 @@
 from django.shortcuts import render , redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
+
 from .forms import Userform
 from vendor_app.forms import Vendorform
 from .models import User , UserProfile 
 from vendor_app.models import Vendor
+
 from django.contrib import messages , auth
 from .utils import detectuser , with_celery_send_varification_link, send_varification_link
 from django.contrib.auth.decorators import login_required , user_passes_test

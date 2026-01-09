@@ -2,6 +2,7 @@ from django.urls import path , include
 from . import views
 from user_accounts import views as Accountviews
 
+
 urlpatterns =[
     path('',Accountviews.vendordashboard,name='vendor'),
     path('profile/',views.vprofile,name='vprofile'),
@@ -15,6 +16,7 @@ urlpatterns =[
     path('menu-builder/fooditeam/add/', views.add_fooditeam,name='add_fooditeam'),
     path('menu-builder/fooditeam/edit/<int:pk>/', views.edit_fooditeam,name='edit_fooditeam'),
     path('menu-builder/fooditeam/delete/<int:pk>/', views.delete_fooditeam,name='delete_fooditeam'),
-
-
+# Opeing Hours CURD
+    path('opening-hours/',views.opening_hours , name='opening_hours'),
+    path('opening-hours/add/', views.add_opening_hours , name='add_opening_hours')
 ]

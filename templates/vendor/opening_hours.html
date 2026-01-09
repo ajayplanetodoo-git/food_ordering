@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- Main Section Start -->
+<div class="main-section">
+    <!-- Load cover background stuff here    -->
+    {% include 'includes/cover.html' %}
+    <div class="page-section account-header buyer-logged-in">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <!-- Load sidebar here -->
+                    {% include "includes/v_sidebar.html" %}
+                </div>
+                <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                    <div class="user-dashboard loader-holder">
+                        <div class="user-holder">
+                            <h5 class="text-upper">Opening Hours</h5>
+                            
+                            <table class="table table-borderless">
+                                <tbody>
+                                    {% for hr in opening_hr %}
+                                    <tr>
+                                        <td><b>{{ hr}}</b></td>
+                                        <td>{% if hr.is_closed %} Closed {% else %} {{hr.from_hour}} - {{hr.to_hour}} {% endif %}</td>
+                                        <td><a href="#">Remove</a></td>
+                                    </tr>
+                                    {% endfor    %}
+                                </tbody>
+                            </table>                            <br>
+                            <br>
+                            <!-- we will you ajax request for this form -->
+                            <form id="opening_hours">
+                                {% csrf_token %}
+                                <div class="row align-items-center g-2">
+
+                                    <div class="col-md-2 col-6">
+                                        {{ form.day }}
+                                    </div>
+
+                                    <div class="col-md-2 col-6">
+                                        {{ form.from_hour }}
+                                    </div>
+
+                                    <div class="col-md-2 col-6">
+                                        {{ form.to_hour }}
+                                    </div>
+
+                                    <div class="col-md-3 col-6 d-flex align-items-center">
+                                        {{ form.is_closed }}
+                                        <label class="mb-0 ml-2">Closed</label>
+                                    </div>
+
+                                    <div class="col-md-3 col-12">
+                                        <button type="button" class="btn btn-success btn-sm w-100 add_hour">
+                                            Add
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{%  endblock %}

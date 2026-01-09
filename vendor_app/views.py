@@ -1,10 +1,10 @@
-from django.shortcuts import render, get_object_or_404,redirect
-from .forms import Vendorform
-from menu.forms import Category_form ,FoodIteam_form
+from django.shortcuts import render, get_object_or_404,redirect 
+from .forms import Vendorform , OpeingHoursForm
+from menu.forms import Category_form ,FoodIteam_form 
 from user_accounts.forms import UserProfileForm
 from user_accounts.models import UserProfile , User
-from .models import Vendor
-from django.contrib import messages
+from .models import Vendor ,OpeningHour
+from django.contrib import messages 
 from django.contrib.auth.decorators import login_required , user_passes_test
 from user_accounts.views import check_roles_vendor
 from menu.models import Category ,FoodIteam
@@ -208,3 +208,16 @@ def delete_fooditeam(request,pk=None):
     food.delete()
     messages.success(request," The category is delete successfully")
     return redirect('fooditems_by_category',food.category.id)
+
+def opening_hours(request):
+    # opeing_hr = OpeningHour.objects.filter(vendor__user=request.user)
+    opeing_hr = OpeningHour.objects.filter(vendor=get_vendor(request))
+    form = OpeingHoursForm()
+    context ={
+        'form' : form,
+        'opening_hr' : opeing_hr,
+    }
+    return render(request , 'vendor/opening_hours.html',context) 
+
+def add_opening_hours(request):
+    return 

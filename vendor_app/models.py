@@ -1,6 +1,7 @@
 from django.db import models
 from user_accounts.models import User ,UserProfile 
 from user_accounts.utils import send_notification
+from datetime import time 
 
 class Vendor(models.Model):
     user = models.OneToOneField(User, related_name="vendor",on_delete=models.CASCADE)
@@ -38,3 +39,31 @@ class Vendor(models.Model):
                     send_notification(mail_subject,mail_template,context)
         return super(Vendor,self).save(*args, **kwargs)
 
+
+DAYS=[
+    (1,('Monday')),
+    (2,('Tuesday')),
+    (3,('Wednesday')),
+    (4,('Thurstday')),
+    (5,('Friday')),
+    (6,('Saturday')),
+    (7,('Sunday')),
+
+]
+
+HOUR_OF_DAY_DAY = t = [(time(h,m).strftime('%I:%M %P'),time(h,m).strftime('%I:%M %P')) for h in range(0,24) for m in (0,30)]
+
+class OpeningHour(models.Model):
+    vendor = models.ForeignKey(Vendor,on_delete=models.Case)
+    day=models.IntegerField(choices=DAYS)
+    from_hour = models.CharField(choices=HOUR_OF_DAY_DAY,max_length=10 ,blank=True)
+    to_hour = models.CharField(choices=HOUR_OF_DAY_DAY,max_length=10,blank=True)
+    is_closed = models.BooleanField(default=False)
+
+    class Meta:
+        ordering =('day','from_hour')
+        unique_together = ('day','from_hour','to_hour')
+
+    def __str__(self):
+        return self.get_day_display() # get_fieldname_display tgis in built function show me choice field 
+                                    # ex: (1,'Monday)  so it modnay show in html insted of 1
