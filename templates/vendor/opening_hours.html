@@ -17,7 +17,7 @@
                         <div class="user-holder">
                             <h5 class="text-upper">Opening Hours</h5>
                             
-                            <table class="table table-borderless">
+                            <table class="table table-borderless opening_hours_table">
                                 <tbody>
                                     {% for hr in opening_hr %}
                                     <tr>
@@ -34,7 +34,7 @@
                                 {% csrf_token %}
                                 <div class="row align-items-center g-2">
 
-                                    <div class="col-md-2 col-6">
+                                    <div class="col-md-3 col-6">
                                         {{ form.day }}
                                     </div>
 
@@ -46,12 +46,13 @@
                                         {{ form.to_hour }}
                                     </div>
 
-                                    <div class="col-md-3 col-6 d-flex align-items-center">
+                                    <div class="col-md-2 col-6 d-flex align-items-center">
                                         {{ form.is_closed }}
                                         <label class="mb-0 ml-2">Closed</label>
                                     </div>
 
                                     <div class="col-md-3 col-12">
+                                        <input type="hidden" value="{% url 'add_opening_hours' %}" id="add_hours_url">
                                         <button type="button" class="btn btn-success btn-sm w-100 add_hour">
                                             Add
                                         </button>

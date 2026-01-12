@@ -140,14 +140,55 @@ $(document).on('click', '.delete_cart', function (e) {
     });
 });
 
-// add hours js
+// add hours js . 1st  it will hit class name which i assinged  in button 
 $(document).on('click', '.add_hour', function (e) {
     e.preventDefault();
-    var day = document.getElementById('id_day').value 
+    var day = document.getElementById('id_day').value // if you not assinged any id key in html  js defaul give it a id like id_day etc
     var from_hour = document.getElementById('id_from_hour').value 
     var to_hour = document.getElementById('id_to_hour').value 
     var is_closed = document.getElementById('id_is_closed').checked
     var csrf_token = $('input[name=csrfmiddlewaretoken]').val()
+    var url = document.getElementById('add_hours_url').value // here we define id separty so js not assinged it default
+
+    if(is_closed){
+        is_closed = "True"
+        condition = " day != '' "
+    }else{
+        is_closed="False"
+        condition = " day != '' && from_hour != '' && to_hour != '' "
+    }
+// this responsible for sending request or naything to django becoze url come in action here 
+    if(eval(condition)){
+        $.ajax({
+            type:'POST',
+            url : url,
+            data : {
+                'day':day,
+                'from_hour':from_hour,
+                'to_hour':to_hour,
+                'is_closed':is_closed,
+                'csrfmiddlewaretoken':csrf_token,
+            },
+            success:function(response){
+                if(response.status=='success'){
+                    if(response.is_closed=='Closed'){
+                        // here we are making html for append in html table  
+                        html = '<tr><td><b>'+ response.day +'</b></td><td>Closed</td><td><a href="#">Remove</a></td></tr>';
+                    }else{
+                        html = '<tr><td><b>'+ response.day +'</b></td><td>'+ response.from_hour +'  '+ response.to_hour + '</td><td><a href="#">Remove</a></td></tr>';
+
+                    }
+                    
+                    $('.opening_hours_table').append(html)
+                    document.getElementById('opening_hours').reset();
+                }
+            }
+        })
+    }else{
+        alert("Please filled every fields")
+        
+    }
+
     console.log(day,from_hour,to_hour,is_closed,csrf_token)
 
 
