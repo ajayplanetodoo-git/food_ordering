@@ -20,10 +20,10 @@
                             <table class="table table-borderless opening_hours_table">
                                 <tbody>
                                     {% for hr in opening_hr %}
-                                    <tr>
+                                    <tr id="hour-{{hr.id}}">
                                         <td><b>{{ hr}}</b></td>
                                         <td>{% if hr.is_closed %} Closed {% else %} {{hr.from_hour}} - {{hr.to_hour}} {% endif %}</td>
-                                        <td><a href="#">Remove</a></td>
+                                        <td><a href="#" class='remove_hours' data-url = "{% url 'remove_opening_hours' hr.id %}">Remove</a></td>
                                     </tr>
                                     {% endfor    %}
                                 </tbody>

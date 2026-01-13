@@ -173,9 +173,9 @@ $(document).on('click', '.add_hour', function (e) {
                 if(response.status=='success'){
                     if(response.is_closed=='Closed'){
                         // here we are making html for append in html table  
-                        html = '<tr><td><b>'+ response.day +'</b></td><td>Closed</td><td><a href="#">Remove</a></td></tr>';
+                        html = '<tr id="hour-'+response.id +'"><td><b>'+ response.day +'</b></td><td>Closed</td><td><a href="#" class="remove_hours" data-url="/vendor/opening-hours/remove/'+response.id +'/">Remove</a></td></tr>';
                     }else{
-                        html = '<tr><td><b>'+ response.day +'</b></td><td>'+ response.from_hour +'  '+ response.to_hour + '</td><td><a href="#">Remove</a></td></tr>';
+                        html = '<tr id="hour-'+response.id +'"><td><b>'+ response.day +'</b></td><td>'+ response.from_hour +'  '+ response.to_hour + '</td><td><a href="#" class="remove_hours" data-url="/vendor/opening-hours/remove/'+response.id +'/">Remove</a></td></tr>';
 
                     }
                     
@@ -191,8 +191,23 @@ $(document).on('click', '.add_hour', function (e) {
 
     console.log(day,from_hour,to_hour,is_closed,csrf_token)
 
+});
+// for removing hours
 
-
-
+$(document).on('click', '.remove_hours', function (e) {
+    e.preventDefault()
+    // url = document.getElementById('remove_opening_hours') this kind of getting url used when it fixed not have any id alway fixed url we used like this
+    url = $(this).attr('data-url'); // when url are not fix change very time then used this type approche here url also have id which is change very time
+    console.log(url)
+    $.ajax({
+      type:'GET',
+      url : url,
+      success : function(response){
+        if(response.status=='success'){
+            document.getElementById('hour-'+response.id).remove()
+            
+        }
+    }  
+    })
 
 });

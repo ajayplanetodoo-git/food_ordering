@@ -1,8 +1,10 @@
 from django.db import models
 from user_accounts.models import User ,UserProfile 
 from user_accounts.utils import send_notification
-from datetime import time 
+from datetime import date , datetime , time
 
+from django.utils import timezone
+import pytz
 class Vendor(models.Model):
     user = models.OneToOneField(User, related_name="vendor",on_delete=models.CASCADE)
     user_profile = models.OneToOneField(UserProfile, related_name="vendor",on_delete=models.CASCADE)
@@ -16,6 +18,28 @@ class Vendor(models.Model):
 
     def __str__(self):
         return self.vendor_name
+    
+#  function in side model class is called member Function this function act as vendors field vendor.is_open
+# Check current day's opening Hours. 
+    def is_open(self):
+        today_date = date.today()
+        day= today_date.isoweekday()
+
+        current_opening_hours = OpeningHour.objects.filter(vendor=self,day=day)
+        now = timezone.now().astimezone(pytz.timezone('Asia/Kolkata'))
+        current_time = now.strftime("%H:%M:%S")
+        print(current_time)
+
+        is_open =None
+        for i in current_opening_hours:
+            start = str(datetime.strptime(i.from_hour,'%I:%M %p').time())
+            end = str(datetime.strptime(i.to_hour,'%I:%M %p').time())
+            if current_time > start and current_time<end:
+                is_open = True
+                break
+            else:
+                is_open = False        
+        return is_open                                                                                         
 
 # This is for overide defult  save function in admin planel for vendar is approved  
 # button checked if and i will send emai;l using help guction
@@ -61,8 +85,8 @@ class OpeningHour(models.Model):
     is_closed = models.BooleanField(default=False)
 
     class Meta:
-        ordering =('day','from_hour')
-        unique_together = ('day','from_hour','to_hour')
+        ordering =('day','-from_hour')
+        unique_together = ('vendor','day','from_hour','to_hour')
 
     def __str__(self):
         return self.get_day_display() # get_fieldname_display tgis in built function show me choice field 

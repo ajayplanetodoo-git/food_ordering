@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404 
-from vendor_app.models import Vendor
+from vendor_app.models import Vendor , OpeningHour
 from menu.models import Category, FoodIteam
 from django.db.models import Prefetch
 from django.http import HttpResponse , JsonResponse
@@ -10,6 +10,9 @@ from django.db.models import Q
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.measure import D # ``D`` is a shortcut for ``Distance``
 from django.contrib.gis.db.models.functions import Distance
+from datetime import date , datetime
+from django.utils import timezone
+import pytz
 
 def marketplace(request):
     vendor = Vendor.objects.filter(is_approved=True,user__is_active=True)[:8]
@@ -30,6 +33,14 @@ def vendor_details(request,vendor_slug):
             queryset=FoodIteam.objects.filter(is_available=True)
         )
     )
+#    Current Opeing Hours cxalculation
+    opening_hours = OpeningHour.objects.filter(vendor=vendor).order_by('day','-from_hour')
+    
+    today_date = date.today()
+    day= today_date.isoweekday()
+    current_opening_hours = OpeningHour.objects.filter(vendor=vendor,day=day)
+
+    
 
     if request.user.is_authenticated:
         cart_iteams = Cart.objects.filter(user=request.user)
@@ -39,6 +50,8 @@ def vendor_details(request,vendor_slug):
         'vendor':vendor,
         'category': categoy,
         'cart_iteams' : cart_iteams,
+        'opening_hours' : opening_hours,
+        'current_opeing_hr' : current_opening_hours,
     }
     return render(request,'marketplace/vendor_details.html',context)
 
