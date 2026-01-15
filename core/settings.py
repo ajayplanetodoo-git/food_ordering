@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django_celery_results',
     'marketplace',
     'django.contrib.gis',
+    'customers',
     ]
 
 MIDDLEWARE = [

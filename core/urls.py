@@ -20,16 +20,21 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from marketplace  import views as marketplaceViews
+from user_accounts import views as account_views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.home , name="home"),
     path(" ", include("user_accounts.urls")),
     path("vendor/",include("vendor_app.urls")),
+    path('customer/',include('customers.urls')),
+
     path('marketplace/',include('marketplace.urls')),
     path('cart/',marketplaceViews.cart, name='cart'),
     # Search 
     path('search/',marketplaceViews.search, name='search'),
+
 
 
 

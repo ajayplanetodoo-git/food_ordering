@@ -42,8 +42,14 @@ class UserProfileForm(forms.ModelForm):
     cover_picture = forms.FileField(widget=forms.FileInput(attrs={'class':'btn-btn-info'}),validators=[img_field_validation])
     latitude = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
     longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    
     class Meta:
         model = UserProfile
         fields = "__all__"
         exclude = ("user",)
 
+
+class UserInfoForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name','last_name','phone_number']
