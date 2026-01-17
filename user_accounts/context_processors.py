@@ -1,5 +1,5 @@
 
-from vendor_app.models import Vendor
+from vendor_app.models import Vendor , UserProfile
 from django.conf import settings
 
 def get_vendor(request):
@@ -8,6 +8,13 @@ def get_vendor(request):
     except:
         vendor=None
     return dict(vendor=vendor)
+
+def get_user_profile(request):
+    try:
+        user_profile = UserProfile.objects.get(user=request.user)   
+    except:
+        user_profile = None
+    return dict(user_profile=user_profile)
 
 '''
 this function for google api key acces in html template 
