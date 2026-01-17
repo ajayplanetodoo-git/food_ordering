@@ -76,7 +76,7 @@ DAYS=[
 
 ]
 
-HOUR_OF_DAY_DAY = t = [(time(h,m).strftime('%I:%M %P'),time(h,m).strftime('%I:%M %P')) for h in range(0,24) for m in (0,30)]
+HOUR_OF_DAY_DAY = t = [(time(h,m).strftime('%I:%M %p'),time(h,m).strftime('%I:%M %p')) for h in range(0,24) for m in (0,30)]
 
 class OpeningHour(models.Model):
     vendor = models.ForeignKey(Vendor,on_delete=models.Case)
