@@ -34,6 +34,13 @@ urlpatterns = [
     path('cart/',marketplaceViews.cart, name='cart'),
     # Search 
     path('search/',marketplaceViews.search, name='search'),
+    # Chcekout
+    path('checkout/', marketplaceViews.checkout , name='checkout'),
+    # Orders
+   
+    # Order funcanilty
+    path('orders/' , include('orders.urls')),
+
 
 
 

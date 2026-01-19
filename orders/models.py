@@ -47,7 +47,7 @@ class Order(models.Model):
     status = models.CharField(max_length=15,choices=STATUS, default='New')
     is_ordered = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     @property # this function act as field like compute in odoo combline two filed without saving in db
     def name(self):
@@ -56,6 +56,21 @@ class Order(models.Model):
     def __str__(self):
         return self.order_number
     
+class OrderedFood(models.Model):
+    order = models.ForeignKey(Order,on_delete=models.CASCADE)
+    payment = models.ForeignKey(Payment,on_delete=models.SET_NULL, blank=True, null=True)
+    user = models.ForeignKey(User , on_delete=models.CASCADE)
+    food_items = models.ForeignKey(FoodIteam, on_delete=models.CASCADE)
+
+    qunatity = models.IntegerField()
+    price = models.FloatField()
+    created_at = models.DateField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+
+    def __str__(self):
+        return self.food_items.food_title
+
     
 
 

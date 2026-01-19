@@ -12,6 +12,8 @@ from django.contrib.gis.measure import D # ``D`` is a shortcut for ``Distance``
 from django.contrib.gis.db.models.functions import Distance
 from datetime import date , datetime
 from django.utils import timezone
+from orders.forms import OrderForm
+from user_accounts.models import UserProfile
 import pytz
 
 def marketplace(request):
@@ -179,3 +181,32 @@ def search(request):
         }
 
         return render(request , 'marketplace/listing.html',context)
+    
+@login_required(login_url='login')
+def checkout(request):
+    cart_items = Cart.objects.filter(user=request.user).order_by('created_at')
+    cart_count = cart_items.count()
+    user = request.user
+    user_profile = UserProfile.objects.get(user=user)
+    if cart_count <=0:
+        return redirect('marketplace')
+
+    default_value = {
+        'first_name':user.first_name,
+        'last_name':user.last_name,
+        'email':user.email,
+        'phone' : user.phone_number,
+        'address': user_profile.address,
+        'country':user_profile.country,
+        'state':user_profile.state,
+        'city':user_profile.city,
+        'pin_code' : user_profile.pincode,
+    }
+    order_forms = OrderForm(initial=default_value)  # using inital we can propulate data from from model to form like profile model data prepoluated in orderforms
+                                                     # if used . save we aslo save data in oredr model
+
+    context = {
+        'form':order_forms,
+        'cart' : cart_items
+    }
+    return render(request, 'marketplace/checkout.html',context)
