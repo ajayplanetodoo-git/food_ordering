@@ -21,8 +21,24 @@ TIME_ZONE = 'Asia/Kolkata'
 USE_TZ = True
 
 
+
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+#  this setting for locatin base search
+# --- GDAL & GEOS library paths (cross-platform) ---
+load_dotenv(BASE_DIR / ".env")
+
+ # this hould be inclued in win .env file for platform indiepdence
+GDAL_LIBRARY_PATH = os.environ.get("GDAL_LIBRARY_PATH")
+GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH")
+
+
+
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -169,24 +185,11 @@ MEDIA_ROOT =  BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # email configraion
-# EMAIL_HOST=config("EMAIL_HOST")
-# EMAIL_PORT=config("EMAIL_PORT",cast=int)
-# EMAIL_HOST_USER=config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
-# EMAIL_USE_TLS = True
-# DEFAULT_FIELD_EMAIL = f"Foodonline Marketplace <ajay.planetodoo@gmail.com>"
+EMAIL_HOST=config("EMAIL_HOST")
+EMAIL_PORT=config("EMAIL_PORT",cast=int)
+EMAIL_HOST_USER=config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+DEFAULT_FIELD_EMAIL = f"Foodonline Marketplace <ajay.planetodoo@gmail.com>"
 
 GOOGLE_API_KEY = 'AIzaSyCTREsXKz3pa8Z4f8kCj9YANYRCf5enkaE'
-
-#  this setting for locatin base search 
-# --- GDAL & GEOS library paths (cross-platform) ---
-load_dotenv(BASE_DIR / ".env")
-
-if sys.platform.startswith("win"): # this hould be inclued in win .env file for platform indiepdence
-    GDAL_LIBRARY_PATH = os.environ.get("GDAL_LIBRARY_PATH", r"C:\OSGeo4W\bin\gdalxx.dll")
-    GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH", r"C:\OSGeo4W\bin\geos_c.dll")
-else:
-    # GDAL_LIBRARY_PATH = os.environ.get("GDAL_LIBRARY_PATH", "/usr/lib/libgdal.so")
-    # GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH", "/lib/x86_64-linux-gnu/libgeos_c.so")
-    GDAL_LIBRARY_PATH = os.environ.get("GDAL_LIBRARY_PATH")
-    GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH")
