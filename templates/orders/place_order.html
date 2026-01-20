@@ -21,7 +21,17 @@
 											
                                                 <div id="menu-item-list-6272" class="menu-itam-list">
 
-												
+												<div class="billing_address">
+													<b> {{order.name}}</b>
+													<div> {{order.address}}</div>
+													<div> {{order.city}}-{{order.pin_code}}</div>
+													<div> {{order.state}},{{order.country}}</div>
+													<div><b>Phone:</b> {{order.phone}}</div>
+													<div><b>Email:</b> {{order.email}}</div>
+													<div><b>Payment:</b> {{order.payment_method}}</div>
+													<br>
+													<div><a href="{% url 'checkout' %}" class="btn btn-outline-danger">Edit</a></div>
+												</div>
 											</div>
 										</div>
 										</div>
@@ -42,7 +52,48 @@
 										<div id="home" class="tab-pane in active">
 											<div class="menu-itam-holder">
 												
-												<div>
+												<div class="table-responsive">
+													
+													<table class="table table-borderless table-sm">
+														<tbody>
+															{% for item in cart_item %}
+															<tr>
+																<td class="text-nowrap">
+																	<img src="{{ item.fooditeam.image.url }}"
+																		width="30"
+																		height="30"
+																		style="object-fit: cover;"
+																		alt="Food Image">
+																</td>
+
+																<td class="text-truncate" style="max-width: 120px;">
+																	<small><b>{{ item.fooditeam }}</b></small>
+																</td>
+
+																<td class="text-nowrap">
+																	<small>{{ item.quantity }} QTY</small>
+																</td>
+
+																<td class="text-nowrap text-right">
+																	<small>₹ {{ item.fooditeam.price }}</small>
+																</td>
+															</tr>
+															{% endfor %}
+														</tbody>
+													</table>
+
+
+
+														<!-- <div class="cart-row">
+																{% for item in cart_item %}
+																	<div class="cart-item">
+																		<img src="{{ item.fooditeam.image.url }}" width="30" alt="Food Image">
+																		<small><b>{{ item.fooditeam }}</b></small>
+																		<span><small> {{ item.quantity}}QTY</small></span>
+																		<span><small> RS{{ item.fooditeam.price }}</small></span>
+																	</div>
+																{% endfor %}
+															</div> -->
                                                     <ul>
                                                         <li style="list-style-type: none;">
                                                             Subtotal

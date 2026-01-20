@@ -54,7 +54,7 @@ class Order(models.Model):
         return f"{self.first_name} {self.last_name}"
     
     def __str__(self):
-        return self.order_number
+        return self.order_no
     
 class OrderedFood(models.Model):
     order = models.ForeignKey(Order,on_delete=models.CASCADE)
