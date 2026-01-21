@@ -56,4 +56,9 @@ def place_order(request):
     return render(request, 'orders/place_order.html')
 
 def payment(request):
+    # check request is ajxa or not 
+
+    # Store payment details in the payment model
+
+    # Update the order 
     pass
