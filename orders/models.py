@@ -64,6 +64,7 @@ class OrderedFood(models.Model):
 
     qunatity = models.IntegerField()
     price = models.FloatField()
+    amount = models.FloatField()
     created_at = models.DateField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

@@ -41,7 +41,7 @@ def send_varification_link(request,user,mail_subject,mail_template):
     mail = EmailMessage(mail_subject,messege, from_email,to=[to_email])
     mail.send()
 
-''' try this from celery and redit it also send mail but it for more user noty for normal user as  above method if user or trafic is heavy then it will  
+''' try this from celery and redit it also send mail but it for more user noty for normal user as  above. this  method if user or trafic is heavy then it will  
 not slow website it handel properly 
 '''
 
@@ -67,11 +67,15 @@ def with_celery_send_varification_link(self,user_id,domain,mail_subject,mail_tem
 
     '''
     this function used for only send notifaication email when admin check is approved flag in vendor app from panal  
-    apart from this it hot used in any case
+    apart from this it not used in any case
     '''
 def send_notification(mail_subject,mail_template,context):
     from_email = settings.DEFAULT_FROM_EMAIL
     messeage = render_to_string(mail_template,context)
-    to_email = context['user'].email
-    mail = EmailMessage(mail_subject,messeage, from_email,to=[to_email])
+    if (isinstance(context['to_email'],str)):
+        to_email = []
+        to_email.append(context['to_email'])
+    else:
+        to_email = context['to_email']
+    mail = EmailMessage(mail_subject,messeage, from_email,to=to_email)
     mail.send()
