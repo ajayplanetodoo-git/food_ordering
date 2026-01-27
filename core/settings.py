@@ -193,3 +193,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # DEFAULT_FIELD_EMAIL = f"Foodonline Marketplace <ajay.planetodoo@gmail.com>"
 
 GOOGLE_API_KEY = 'AIzaSyCTREsXKz3pa8Z4f8kCj9YANYRCf5enkaE'
+
+RZP_KEY_ID = config('RZP_KEY_ID')
+RZP_KEY_SECRET = config('RZP_KEY_SECRET')

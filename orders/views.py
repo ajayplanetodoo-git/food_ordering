@@ -13,7 +13,13 @@ from .models import Order , Payment ,OrderedFood
 from user_accounts .utils import send_notification
 from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+
+from core.settings import RZP_KEY_ID,RZP_KEY_SECRET
+import razorpay
+client = razorpay.Client(auth=(RZP_KEY_ID, RZP_KEY_SECRET))
+
+
+
 
 @login_required(login_url='login')
 def place_order(request):
@@ -51,9 +57,26 @@ def place_order(request):
             order.save() # here order will save and pk will generate 
             order.order_no = generate_order_number(order.id)
             order.save()
+            #  Razorpay Payments
+            DATA = {
+                "amount": float(order.total)*100,
+                "currency": "INR",
+                "receipt": "receipt #"+order.order_no,
+                "notes": {
+                    "key1": "value3",
+                    "key2": "value2"
+                }
+            }
+            rzp_order = client.order.create(data=DATA)
+            rzp_order_id = rzp_order['id']
+            print(rzp_order)
+
             context = {
                 "order":order,
                 'cart_item' : cart_items,
+                'rzp_order_id':rzp_order_id,
+                'rzp_key_id' : RZP_KEY_ID,
+                'rzp_amount': float(order.total)*100
             }
             return render(request, 'orders/place_order.html',context)
         else:
@@ -143,4 +166,26 @@ def payment(request):
 
 
 def order_complete(request):
-    return render(request,'orders/order_complete.html')
+    order_number = request.GET.get('order_no')
+    transaction_id = request.GET.get('transaction_id')
+
+    try:
+        order = Order.objects.get(order_no=order_number,
+                                   payment__tarnsaction_id=transaction_id,is_ordered=True)
+        ordered_food = OrderedFood.objects.filter(order=order)
+
+        subtotal = 0
+        for item in ordered_food:
+            subtotal+=(item.price*item.qunatity) 
+
+        tax_data = json.loads(order.tax_data)  #  json.loads used for fetching data in json file and dump used for appending in jsone field
+        context = {
+             'order':order,
+             "ordered_food" : ordered_food,
+             'subtotal': subtotal,
+             'tax_data':tax_data,
+         }
+        return render(request,'orders/order_complete.html',context)
+
+    except :
+        return redirect('home')
