@@ -11,14 +11,14 @@ class Payment(models.Model):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    tarnsaction_id = models.CharField(max_length=100)
+    transaction_id = models.CharField(max_length=100)
     payment_method = models.CharField(choices=PAYMENT_METHOD,max_length=100)
     amount = models.CharField(max_length=100)
     status = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.tarnsaction_id
+        return self.transaction_id
     
 class Order(models.Model):
     STATUS = (

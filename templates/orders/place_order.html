@@ -3,6 +3,8 @@
 {% block content %}
     
 <!-- Main Section Start -->
+<form method="post">
+	{% csrf_token %}
 			<div class="main-section pt-5">
 
 				<div class="page-section">
@@ -123,7 +125,7 @@
 															</span>
                                                         </li>
 														<div class="rzp-payment">
-															<button class="btn btn-danger w-100 p-2" id="rzp-button1">
+															<button type="button" class="btn btn-danger w-100 p-2" id="rzp-button1">
 																Pay with Razorpay</button>
 																<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 														</div>
@@ -136,14 +138,41 @@
 									</div>
 								</div>
 							
-							
+							 </div>
 						</div>
 					</div>
 				</div>
 			</div>
+	</form>
 			<!-- Main Section End -->
 
 <script>
+
+// This code 	for the csrf token
+	var payment_url = "{% url 'payment' %}";
+	var order_number = "{{ order.order_no}}";
+	var order_complete_url = "{% url 'order_complete' %}";
+
+	function getcookie(name){
+		let cookievalue = null;
+		if(document.cookie && document.cookie !== " "){
+			const cookies = document.cookie.split(';');
+			for(let i=0; i < cookies.length; i++){
+				const cookie = cookies[i].trim();
+				if (cookie.substring(0,name.length+1)===(name+'=')){
+					cookievalue = decodeURIComponent(cookie.substring(name.length+1));
+					break;
+				}
+			}
+		}
+		return cookievalue
+	}
+	const csrftoken = getcookie('csrftoken');
+
+
+
+
+
 
 	// Razorpay button here 
 
@@ -200,17 +229,23 @@
 		$.ajax({
 
 			type:'POST',
-			url:url,
+			url:payment_url,
+			headers: {
+            'X-CSRFToken': csrftoken
+        	},
 			data :{
 				'order_number':order_number,
 				'transaction_id' : transaction_id,
 				'payment_method' : payment_method,
 				'status': status,
-				'csrfmiddlewaretoken':csrftoken
 
 			},
 			success:function(response){
-				windows.location.href = order_complete + '?order_no-'+ response.order_number+'&transaction_id='+response.transaction_id
+				window.location.href = order_complete_url  +
+				 '?order_no='+
+				  response.order_number+
+				  '&transaction_id='+
+				  response.transaction_id
 			}
 		})
 	}

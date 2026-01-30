@@ -10,7 +10,7 @@ class OrderedFoodinLine(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['order_no','name','phone','email','total','payment_method','status','is_ordered']
-    inlines = [OrderedFood]
+    inlines = [OrderedFoodinLine]
 
 admin.site.register(Payment)
 admin.site.register(Order,OrderAdmin)
