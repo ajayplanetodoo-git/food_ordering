@@ -22,69 +22,70 @@
 						<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
 							<div class="user-dashboard loader-holder">
 								<div class="user-holder">
-									
-									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-										<div class="row">
-											<div class="element-title has-border right-filters-row">
-												<h5>Recent Orders</h5>
-												<div class="right-filters row pull-right">
-													<div class="col-lg-6 col-md-6 col-xs-6">
-														<div class="input-field">
-															<select class="chosen-select-no-single">
-																<option selected="selected" value="">Select Orders Status</option>
-																<option value="Processing">Processing</option>
-																<option value="Cancelled">Cancelled</option>
-																<option value="Completed">Completed</option>
-															</select>
-														</div>
-													</div>
-													
+									<h5 class="text-uppercase">Overview</h5>
+									<div class="row">
+										<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+											<div class="card">
+												<div class="card-header">
+													Total Orders
+												</div>
+												<div class="card-body text-center">
+													<a href="#"> <h5 class="card-title">{{order_count}}</h5></a>
 												</div>
 											</div>
 										</div>
+										<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+											<div class="card">
+												<div class="card-header">
+													Logged in as :<b>{{user.email}}<b>
+												</div>
+												<div class="card-body text-center">
+													<a href="{% url 'customer_profile' %}"> <h5 class="card-title">
+														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+</svg>
+														Edit Profile</h5></a>
+												</div>
+											</div>
+										</div>
+										
 									</div>
+									<br>
+									
+									<h5 class="text-uppercase">Recent Orders</h5>
 									<div class="row">
 										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 											<div class="user-orders-list">
 												<div class="responsive-table">
-													<ul class="table-generic">
-														<li class="order-heading-titles">
-															<div>Order id</div>
-															<div>Date</div>
-															<div>Total Price</div>
-															<div>Charges</div>
-															<div>Received</div>
-															<div>Status</div>
-														</li>
-														<li class="order-heading-titles">
-															<div><a href="#" data-toggle="modal" data-target="#order-det-22606">order-22606</a></div>
-															<div>Apr 9,2020</div>
-															<div>£ 38.99</div>
-															<div>£ 3.90</div>
-															<div>£ 35.09</div>
-															<div><span class="order-status" style="background-color: #047a06;">Completed</span></div>
-														</li>
-														
-														
-														
-														<li class="order-heading-titles">
-															<div><a href="#" data-toggle="modal" data-target="#order-det-22606">order-22583</a></div>
-															<div>Apr 9,2020</div>
-															<div>£ 26.22</div>
-															<div>£ 2.62</div>
-															<div>£ 23.60</div>
-															<div><span class="order-status" style="background-color: #1e73be;">Processing</span></div>
-														</li>
-														<li class="order-heading-titles">
-															<div><a href="#" data-toggle="modal" data-target="#order-det-22606">order-22493</a></div>
-															<div>Apr 2,2020</div>
-															<div>£ 28.24</div>
-															<div>£ 2.82</div>
-															<div>£ 25.42</div>
-															<div><span class="order-status" style="background-color: #047a06;">Completed</span></div>
-														</li>
-													</ul>
+													<table class="table  table-hover">
+														<thead>
+															<tr>
+															<th scope="col">Order No</th>
+															<th scope="col">Name</th>
+															<th scope="col">Total</th>
+															<th scope="col">Status</th>
+															<th scope="col">Date</th>
+															<th scope="col">Action</th>
+															</tr>
+														</thead>
+														<tbody>
+															{% for i in order %}
+															
+															<tr>
+																
+															<td><small>{{i.order_no}}</small></td>
+															<td><small>{{i.name}}></small></td>
+															<td><small>RS.{{i.total}}</small></td>
+															<td><small>{{i.status}}</small></td>
+															<td><small>{{i.created_at}}</small></td>
+															<td><a href="" class="btn btn-danger">Details</a></td>
 
+															
+															</tr>
+															{% endfor %}
+														</tbody>
+														</table>
 												</div>												
 											</div>
 										</div>

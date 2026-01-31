@@ -6,6 +6,7 @@ from .forms import Userform
 from vendor_app.forms import Vendorform
 from .models import User , UserProfile 
 from vendor_app.models import Vendor
+from orders.models import Order
 
 from django.contrib import messages , auth
 from .utils import detectuser , with_celery_send_varification_link, send_varification_link
@@ -195,11 +196,12 @@ def myaccount(request):
 @login_required(login_url='login')
 @user_passes_test(check_roles_customer)
 def custmerdashboard(request):
-    user = request.user
-    print(user)
+    orders = Order.objects.filter(user=request.user,is_ordered=True)[:5]
     context = {
-        'user':user
+        'order':orders,
+        'order_count' : orders.count()
     }
+   
     return render(request,"user_accounts/custdashboard.html",context)
 
 @login_required(login_url='login')

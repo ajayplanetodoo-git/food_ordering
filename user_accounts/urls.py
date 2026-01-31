@@ -22,4 +22,6 @@ urlpatterns =[
     path('vendor/',include('vendor_app.urls')),
     path('customer/', include('customers.urls')),
 
+    
+
 ]
