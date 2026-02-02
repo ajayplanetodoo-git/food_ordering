@@ -126,32 +126,32 @@ def payment(request):
 
 
         #send order confirmation mail to customer
-        mail_subject = "Thanku you for Ordering with us"
-        mail_template = 'orders/order_confirmation_email.html'
+        # mail_subject = "Thanku you for Ordering with us"
+        # mail_template = 'orders/order_confirmation_email.html'
 
-        context =  {
-            'user':request.user,
-            'order' : order,
-            'to_email': order.email,
+        # context =  {
+        #     'user':request.user,
+        #     'order' : order,
+        #     'to_email': order.email,
 
-        }
+        # }
 
-        send_notification(mail_subject,mail_template,context)
+        # send_notification(mail_subject,mail_template,context)
 
 
-        # send order recievd mail to the vendor  imp thing is here  vvendor may be multipal
-        mail_subject = 'You have recived new order'
-        mail_template = 'orders/new_order_recived.html'
-        to_emails = []
-        for i in cart_iteam:
-            if i.fooditeam.vendor.user.email not in to_emails:
-                to_emails.append(i.fooditeam.vendor.user.email)
-        print('to_emails==>',to_emails)
-        context = {
-            'order' : order,
-            'to_email' : to_emails,
-        }
-        send_notification(mail_subject,mail_template,context)
+        # # send order recievd mail to the vendor  imp thing is here  vvendor may be multipal
+        # mail_subject = 'You have recived new order'
+        # mail_template = 'orders/new_order_recived.html'
+        # to_emails = []
+        # for i in cart_iteam:
+        #     if i.fooditeam.vendor.user.email not in to_emails:
+        #         to_emails.append(i.fooditeam.vendor.user.email)
+        # print('to_emails==>',to_emails)
+        # context = {
+        #     'order' : order,
+        #     'to_email' : to_emails,
+        # }
+        # send_notification(mail_subject,mail_template,context)
 
 
         # clear the cart if the payment is success

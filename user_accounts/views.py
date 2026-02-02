@@ -196,10 +196,12 @@ def myaccount(request):
 @login_required(login_url='login')
 @user_passes_test(check_roles_customer)
 def custmerdashboard(request):
-    orders = Order.objects.filter(user=request.user,is_ordered=True)[:5]
+    orders = Order.objects.filter(user=request.user,is_ordered=True)
+    recent_order = orders[:3]
     context = {
         'order':orders,
-        'order_count' : orders.count()
+        'order_count' : orders.count(),
+        'recent_order': recent_order,
     }
    
     return render(request,"user_accounts/custdashboard.html",context)
