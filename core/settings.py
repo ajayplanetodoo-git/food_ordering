@@ -81,6 +81,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'orders.middelware_request_object.RequestobjectMiddelware', # Custome middelware to acces request object in model.py
 ]
 # ?celery config
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'

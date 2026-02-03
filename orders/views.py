@@ -1,11 +1,12 @@
 from django.http import HttpRequest,HttpResponse , JsonResponse
 from django.shortcuts import render , redirect
-from marketplace.models import Cart
+from marketplace.models import Cart, Tax
 from user_accounts.models import UserProfile
 from marketplace.context_processors import get_cart_total
 
 from orders.forms import OrderForm
 from .models import Order
+from menu.models import FoodIteam
 import simplejson as json
 from .utils import generate_order_number
 from .models import Order , Payment ,OrderedFood
@@ -30,6 +31,36 @@ def place_order(request):
     if cart_count <=0:
         return redirect('marketplace')
     
+    vendors_ids = list({i.fooditeam.vendor.id for i in cart_items})
+
+# {"vendor_id":{"subtotal":{"tax_type":{"tax_percentage":"tax_amount"}}}}
+    get_tax = Tax.objects.filter(is_active=True)
+    subtotal=0
+    k = {}
+    total_data ={}
+
+    for i in cart_items:
+        fooditem = FoodIteam.objects.get(pk=i.fooditeam.id , vendor_id__in=vendors_ids)
+        v_id = fooditem.vendor.id
+        if v_id in k:
+            subtotal = k[v_id]
+            subtotal += (fooditem.price* i.quantity)
+            k[v_id]=subtotal
+        else:
+            subtotal = (fooditem.price* i.quantity)
+            k[v_id] = subtotal
+
+        #  Caclulate tax Data
+        tax_dict = {}
+        for i in get_tax:
+            tax_type= i.tax_type
+            tax_percentage = i.tax_percentage
+            tax_amount = round((tax_percentage*subtotal)/100,2)
+            tax_dict.update({tax_type :{str(tax_percentage):str(tax_amount)}})
+        #  Construct total_data  
+        total_data.update({fooditem.vendor.id:{str(subtotal):str(tax_dict)}})
+    print(total_data)
+
     subtotal = get_cart_total(request)['subtotal']
     total_tax = get_cart_total(request)['tax']    
     grand_total = get_cart_total(request)['grand_total']
@@ -52,10 +83,12 @@ def place_order(request):
             order.user = request.user
             order.total = grand_total
             order.tax_data = json.dumps(tax_data)
+            order.total_data = json.dumps(total_data)
             order.total_tax = total_tax
             order.payment_method = request.POST['payment_method']  # this is the input id of  html radio button of razorpay & paypal 
             order.save() # here order will save and pk will generate 
             order.order_no = generate_order_number(order.id)
+            order.vendor.add(*vendors_ids)
             order.save()
             #  Razorpay Payments
             DATA = {
@@ -69,7 +102,7 @@ def place_order(request):
             }
             rzp_order = client.order.create(data=DATA)
             rzp_order_id = rzp_order['id']
-            print(rzp_order)
+            # print(rzp_order)
 
             context = {
                 "order":order,

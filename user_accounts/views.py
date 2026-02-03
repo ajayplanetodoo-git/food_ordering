@@ -209,7 +209,15 @@ def custmerdashboard(request):
 @login_required(login_url='login')
 @user_passes_test(check_roles_vendor)
 def vendordashboard(request):
-    return render(request,"user_accounts/vendashboard.html")
+    vendors = Vendor.objects.get(user=request.user)
+    orders = Order.objects.filter(vendor__in=[vendors.id],is_ordered=True).order_by('created_at')
+    recent_order = orders
+    context = {
+        'orders':orders,
+        'orders_count' : orders.count(),
+        'recent_order' : recent_order
+    }
+    return render(request,"user_accounts/vendashboard.html",context)
 
 def logout(request):
     auth.logout(request)

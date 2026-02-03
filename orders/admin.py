@@ -9,7 +9,7 @@ class OrderedFoodinLine(admin.TabularInline):
     extra = 0 # this used becouse we  dont need extra filed in tabler table 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['order_no','name','phone','email','total','payment_method','status','is_ordered']
+    list_display = ['order_no','name','phone','email','total','payment_method','status','is_ordered','order_place_to']
     inlines = [OrderedFoodinLine]
 
 admin.site.register(Payment)

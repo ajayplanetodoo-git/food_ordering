@@ -5,7 +5,7 @@ from menu.forms import Category_form ,FoodIteam_form
 
 from user_accounts.forms import UserProfileForm
 from user_accounts.models import UserProfile , User
-from .models import Vendor ,OpeningHour
+from .models import Vendor ,OpeningHour 
 
 from django.contrib import messages 
 from django.contrib.auth.decorators import login_required , user_passes_test
@@ -14,6 +14,7 @@ from user_accounts.views import check_roles_vendor
 from menu.models import Category ,FoodIteam
 from django.template.defaultfilters import slugify
 from django.db import IntegrityError
+from orders.models import Order , OrderedFood
 
 
 # Create your views here.
@@ -265,3 +266,15 @@ def remove_opening_hours(request,pk=None):
             hour = get_object_or_404(OpeningHour,pk=pk)
             hour.delete()
             return JsonResponse({'status':'success', 'id':pk})
+        
+def order_detail(request,order_no):
+    try:
+        order = Order.objects.get(order_no=order_no,is_ordered=True)
+        ordered_food = OrderedFood.objects.filter(order=order , food_items__vendor=get_vendor(request))
+        context = {
+            'order':order,
+            'ordered_food':ordered_food,
+        }
+    except:
+        return redirect('vendor')
+    return render(request, 'vendor/order_details.html',context)
