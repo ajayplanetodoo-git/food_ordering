@@ -1,3 +1,7 @@
+// requireed api for auto complte ✅ Maps JavaScript API
+
+// ✅ Places API
+
 let autocomplete;
 
 function initAutoComplete(){
@@ -68,7 +72,7 @@ function onPlaceChanged (){
     }
 }
 
-//  this function work for addinge product in cart without refress
+//  this function work for addinge product in cart without refresh
 $(document).ready(function(){
 // real time show qty increamwnt and cart no 
     $('.add_to_cart').on('click',function(e){

@@ -51,7 +51,7 @@ def registeruser(request):
                 password=password
                 )
             user.role = User.CUSTOMER
-            user.save()
+            user.save() # here signle will trigger
             #  send verification email
             mail_subject = "activate your account"
             mail_template = 'user_accounts/emails/account_verfy_email.html'
@@ -147,6 +147,7 @@ def activate(request,uiddb64, token):
         return redirect('myaccount')
 
     return
+
 def login(request):
     if request.user.is_authenticated:
         messages.warning(request,"You are already looged in!")
@@ -291,7 +292,7 @@ def reset_password(request):
             return redirect('login')
 
         else:
-            messages.error("Pasword is not matched")
+            messages.error(request,"Pasword is not matched")
             return redirect('reset_password')
     return render(request,'user_accounts/reset_password.html')
 

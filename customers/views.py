@@ -16,7 +16,7 @@ def cust_profile(request):
     if request.method == "POST":
         u_form = UserInfoForm(request.POST,instance=user)
         u_profile_form = UserProfileForm(request.POST,request.FILES,instance=profile)
-        if u_form.is_valid() and u_profOrderedFoodile_form.is_valid():
+        if u_form.is_valid() and u_profile_form.is_valid():
             u_form.save()
             u_profile_form.save()
             messages.success(request,"Profile is Updated successfully")

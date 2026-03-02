@@ -31,7 +31,7 @@ class UserManeger(BaseUserManager):
 
         )
         user.set_password(password) 
-        user.save(using =self._db)
+        user.save(using =self._db) # here signal will trigger
         return user
     
     #  when user is super user then this call create_superuser  function it basicall for admin pandel login  python manage.py cretaesuperuser
