@@ -16,6 +16,8 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.template.defaultfilters import slugify
 
+import datetime 
+
 
 # Create your views here.
 
@@ -49,7 +51,7 @@ def registeruser(request):
                 password=password
                 )
             user.role = User.CUSTOMER
-            user.save()
+            user.save() # here signle will trigger
             #  send verification email
             mail_subject = "activate your account"
             mail_template = 'user_accounts/emails/account_verfy_email.html'
@@ -145,6 +147,7 @@ def activate(request,uiddb64, token):
         return redirect('myaccount')
 
     return
+
 def login(request):
     if request.user.is_authenticated:
         messages.warning(request,"You are already looged in!")
@@ -198,10 +201,12 @@ def myaccount(request):
 def custmerdashboard(request):
     orders = Order.objects.filter(user=request.user,is_ordered=True)
     recent_order = orders[:3]
+    
     context = {
         'order':orders,
         'order_count' : orders.count(),
         'recent_order': recent_order,
+       
     }
    
     return render(request,"user_accounts/custdashboard.html",context)
@@ -212,10 +217,24 @@ def vendordashboard(request):
     vendors = Vendor.objects.get(user=request.user)
     orders = Order.objects.filter(vendor__in=[vendors.id],is_ordered=True).order_by('created_at')
     recent_order = orders
+    #  current month revenue
+    current_month = datetime.datetime.now().month
+    current_month_orders = orders.filter(vendor__in=[vendors.id],created_at__month = current_month)
+    current_month_revenue = 0
+    for i in current_month_orders:
+        current_month_revenue += i.get_total_byvendor()['grand_total']
+
+    #  Total revenue
+    total_revenue = 0
+    for i in orders:
+        total_revenue += i.get_total_byvendor()['grand_total']
+    print(total_revenue)
     context = {
         'orders':orders,
         'orders_count' : orders.count(),
-        'recent_order' : recent_order
+        'recent_order' : recent_order,
+        'total_revenue' :total_revenue,
+        'current_month_revenue' : current_month_revenue,
     }
     return render(request,"user_accounts/vendashboard.html",context)
 
@@ -273,7 +292,7 @@ def reset_password(request):
             return redirect('login')
 
         else:
-            messages.error("Pasword is not matched")
+            messages.error(request,"Pasword is not matched")
             return redirect('reset_password')
     return render(request,'user_accounts/reset_password.html')
 

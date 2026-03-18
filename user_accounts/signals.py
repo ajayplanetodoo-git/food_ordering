@@ -13,10 +13,13 @@ it requred sender which is our User (usermodel) and receiver
 there are two type of specify reciver using decoraters 
 1st :@receiver(post_save,sender=User) 
 post_save.connect(post_save_signal_create_profile_receiver,sender=User)
+
+when .save methdeth is call then signel will trigger
 '''
+#  this function will triggre after .save method and data will save in db 
 @receiver(post_save,sender=User)
 def post_save_signal_create_profile_receiver(sender,instance,created,**kwargs):
-    print(created)
+    print(created) 
     if created: # for creation of userprofile
         UserProfile.objects.create(user=instance)
         print("User Profile is created")
@@ -29,6 +32,7 @@ def post_save_signal_create_profile_receiver(sender,instance,created,**kwargs):
             UserProfile.objects.create(user=instance)
             print("user profile is not exist but ,i created one")
 
+#  this function will trigger before .save() mehod and befor instering data in db  ?
 @receiver(pre_save,sender=User)
 def pre_save_profile_receiver(sender, instance, **kwargs):
     print(instance.username,"This User being save")

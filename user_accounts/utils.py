@@ -23,7 +23,7 @@ def detectuser(user):
         return redirectUrl  
 
     '''
-    blow function used in tow way once user  registraion and  create send mail for activating user and when any one want to change 
+    blow function used in two way once user  registraion and  create send mail for activating user and when any one want to change 
     pasword then it also used
     '''
 #     This function send vefication email
@@ -41,7 +41,7 @@ def send_varification_link(request,user,mail_subject,mail_template):
     mail = EmailMessage(mail_subject,messege, from_email,to=[to_email])
     mail.send()
 
-''' try this from celery and redit it also send mail but it for more user noty for normal user as  above. this  method if user or trafic is heavy then it will  
+''' try this from celery and redit it also send mail but it for more user not for normal user as  above. this  method if user or trafic is heavy then it will  
 not slow website it handel properly 
 '''
 
@@ -50,7 +50,7 @@ def with_celery_send_varification_link(self,user_id,domain,mail_subject,mail_tem
     from_email = settings.DEFAULT_FROM_EMAIL  # this will take email from .env metionded email
     # current_site2 = get_current_site(request) # there it will take current site like http/8000  ect move in view becoze celery func use
     # mail_subject = "Please active you account"
-    from user_accounts.models import User
+    from user_accounts.models import User # this line  alway in the function if u  write out side it not work
     user = User.objects.get(id=user_id)
     messege = render_to_string(mail_template,{
         'user' :user,

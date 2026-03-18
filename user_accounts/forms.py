@@ -19,7 +19,7 @@ class Userform(forms.ModelForm):
             raise forms.ValidationError("Password is not match")
         
 
-    # def clean_username(self): # in this function we are validating suername if it already exixt using get_user_model
+    # def clean_username(self): # in this function we are validating userrname if it already exixt using get_user_model
     #     User = get_user_model()
     #     username = self.cleaned_data.get("username")
     #     qs = User.objects.filter(username=username) # here filter data
