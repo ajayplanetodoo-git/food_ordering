@@ -15,6 +15,6 @@ staticfiles/
 # IDE
 .vscode/
 .idea/
-
+aws_db_user_pass.txt
 # Environment variables
 .env
