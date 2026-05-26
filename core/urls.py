@@ -41,6 +41,9 @@ urlpatterns = [
     # Order funcanilty
     path('orders/' , include('orders.urls')),
 
+    #  APi Routs
+    path('api/v1/menu/', include('menu.api_urls')),
+
 
 
 

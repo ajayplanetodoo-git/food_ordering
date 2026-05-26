@@ -33,7 +33,7 @@ class Userform(forms.ModelForm):
     #      qs = User.objects.filter(email=email)
     #      if qs.exists():
     #          raise forms.ValidationError("Email email is already exist")
-    #      return email
+    #      return email 285679
 
     
 class UserProfileForm(forms.ModelForm):
