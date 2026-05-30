@@ -1,11 +1,20 @@
 from rest_framework import serializers
 from .models import FoodIteam , Category
 
-#
-# class CategorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Category
-#         fields = "__all__"
+'''
+1. Category API
+2. Food Items API
+3. Menu API
+4. User Registration
+5. Vendor Registration
+6. JWT Authentication
+7. Permissions
+8. Cart API
+9. Order API
+10. Payment API
+11. Chatbot APIs
+12. OpenAI/Gemini
+'''
 
 class FoodItemSerializer(serializers.ModelSerializer):
     class Meta :

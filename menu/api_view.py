@@ -1,10 +1,6 @@
-import rest_framework
-from django.db.migrations import serializer
-from django.db.transaction import commit
 from django.shortcuts import get_object_or_404
-from pip._internal.utils import retry
 from rest_framework.response import Response
-from rest_framework import status, parsers
+from rest_framework import status
 from rest_framework.decorators import api_view ,parser_classes
 from .models import Category, FoodIteam
 from .serializers import CategorySerializer, FoodItemSerializer
