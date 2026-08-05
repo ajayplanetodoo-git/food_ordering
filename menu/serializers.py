@@ -2,8 +2,8 @@ from rest_framework import serializers
 from .models import FoodIteam , Category
 
 '''
-1. Category API
-2. Food Items API
+1. Category API - Done
+2. Food Items API - Done
 3. Menu API
 4. User Registration
 5. Vendor Registration

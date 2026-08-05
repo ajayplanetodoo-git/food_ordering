@@ -41,14 +41,15 @@ def categ_details_view(request,pk):
 
 
 
-# this is api end point for FoodItems
+# this is api end point for FoodItems .
+# in this function we can add new and fetch food items
 @api_view(["GET","POST"])
 def food_item_view(request):
     food_item = FoodIteam.objects.all()
-    if request.method == 'GET':
+    if request.method == 'GET': # get only for fetching data
         food_serializer = FoodItemSerializer(food_item,many=True)
         return Response(food_serializer.data,status=status.HTTP_200_OK)
-    elif request.method == "POST":
+    elif request.method == "POST": # from Post method we can add food through api
         serializer = FoodItemSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             food = serializer.save()
@@ -59,7 +60,7 @@ def food_item_view(request):
             return Response(serializer.data,status=status.HTTP_201_CREATED)
 
 
-
+# in this function we fetch by id and also we can update that record using pk
 @api_view(["GET","PUT"])
 @parser_classes([MultiPartParser,FormParser])
 def food_item_details(request,pk):
@@ -67,7 +68,7 @@ def food_item_details(request,pk):
     if request.method == "GET":
         food_serilizer = FoodItemSerializer(food_item)
         return Response(food_serilizer.data, status=status.HTTP_200_OK)
-    if request.method == "PUT":
+    if request.method == "PUT": # this for upadte in existing record we sholud pass id
         food_serilizer = FoodItemSerializer(food_item,data = request.data)
 
         if food_serilizer.is_valid(raise_exception=True):
