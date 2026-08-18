@@ -26,7 +26,7 @@ from user_accounts import views as account_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.home , name="home"),
-    path(" ", include("user_accounts.urls")),
+    path("", include("user_accounts.urls")),
     path("vendor/",include("vendor_app.urls")),
     path('customer/',include('customers.urls')),
 

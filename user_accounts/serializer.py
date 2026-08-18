@@ -12,12 +12,17 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(username=validated_data['username'],
                                         first_name=validated_data['first_name'],
                                         last_name=validated_data['last_name'],
-                                        phone_number = validated_data['phone_number'],
-                                        role=validated_data['role'],
                                         email=validated_data['email'],
                                         password=validated_data['password'])
-
+        user.role = User.CUSTOMER
+        user.save()
         return user
+
+class VendorRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name','last_name','username','email','password','phone_number','role']
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:

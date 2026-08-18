@@ -1,9 +1,12 @@
 from django.urls import path , include
 from . import views
+from . import api_view
+
 
 urlpatterns =[
     path('',views.myaccount),
     path("registeruser/", views.registeruser, name="userregister" ),
+    path("registerapiuser/", api_view.registeruserapi, name='registerapiuser'),
     path("registervendor/", views.registervendor, name="vendorregister" ),
 
     path("myaccount/",views.myaccount , name="myaccount"),
