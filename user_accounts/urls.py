@@ -8,6 +8,7 @@ urlpatterns =[
     path("registeruser/", views.registeruser, name="userregister" ),
     path("registerapiuser/", api_view.registeruserapi, name='registerapiuser'),
     path("registervendor/", views.registervendor, name="vendorregister" ),
+    path("registerapivendor/", api_view.registervendorapi, name="registerapivendor" ),
 
     path("myaccount/",views.myaccount , name="myaccount"),
     path("login/", views.login, name="login" ),
