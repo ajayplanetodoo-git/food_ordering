@@ -35,7 +35,10 @@ class VendorRegistrationSerializer(serializers.ModelSerializer):
                                         email=validated_data['user']['email'],
                                         password=validated_data['user']['password'])
 
-        user_profile = UserProfile.objects.create(
+        user.role = User.VENDOR
+        user.save()
+
+        user_profile = UserProfile.objects.get(
             user=user
         )
 
@@ -45,8 +48,7 @@ class VendorRegistrationSerializer(serializers.ModelSerializer):
             vendor_name = validated_data['vendor_name'],
             vendor_license = validated_data['vendor_license']
         )
-        user.role = User.VENDOR
-        vendor.save()
+
         return vendor
 
 
