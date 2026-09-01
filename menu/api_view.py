@@ -1,9 +1,13 @@
 from django.shortcuts import get_object_or_404
+from kombu.abstract import Object
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, response
 from rest_framework.decorators import api_view ,parser_classes
+
+from . import serializers
 from .models import Category, FoodIteam
-from .serializers import CategorySerializer, FoodItemSerializer
+from vendor_app.models import Vendor
+from .serializers import CategorySerializer, FoodItemSerializer, MenuSerializer
 from rest_framework.parsers import MultiPartParser,FormParser ,FileUploadParser
 from  django.template.defaultfilters import slugify
 
@@ -78,6 +82,15 @@ def food_item_details(request,pk):
             food.is_available = True
             food.save()
             return Response (food_serilizer.data,status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+def vendor_menu(request,pk):
+    vendor = get_object_or_404(Vendor,pk=pk)
+    if request.method == "GET":
+        food_items =  FoodIteam.objects.filter(vendor=vendor)
+        serializer = MenuSerializer(food_items,many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 

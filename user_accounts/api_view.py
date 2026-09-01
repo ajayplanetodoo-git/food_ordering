@@ -27,9 +27,7 @@ def registeruserapi(request):
 @api_view(["POST"])
 @parser_classes([MultiPartParser, FormParser])
 def registervendorapi(request):
-    # print("Reqets data ",request.data)
-    # data = request.data.copy()
-    # data['user'] = json.loads(data['user'])
+
     data = {
         "user":json.loads(request.data['user']),
         "vendor_name": request.data['vendor_name'],
