@@ -13,5 +13,5 @@ urlpatterns = [
     path("food_item/",api_view.food_item_view, name='food_item'),
     path("food_item/<int:pk>",api_view.food_item_details),
 
-    path("menu_item/<int:pk>",api_view.vendor_menu),
+    path("menu_item/<int:pk>",api_view. vendor_menu),
 ]

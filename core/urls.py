@@ -21,6 +21,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from marketplace  import views as marketplaceViews
 from user_accounts import views as account_views
+from rest_framework_simplejwt.views import TokenObtainPairView , TokenVerifyView, TokenRefreshView
+
 
 
 urlpatterns = [
@@ -43,6 +45,11 @@ urlpatterns = [
 
     #  APi Routs
     path('api/v1/menu/', include('menu.api_urls')),
+
+    # Token Routs
+    path('gettoken/',TokenObtainPairView.as_view(),name="token_obtain_pair"),
+    path('refreshtoken/',TokenRefreshView.as_view(),name="token_refresh"),
+    path('verifytoken/',TokenVerifyView.as_view(),name="token_verify")
 
 
 

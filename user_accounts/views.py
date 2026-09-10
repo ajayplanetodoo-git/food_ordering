@@ -156,7 +156,7 @@ def login(request):
         email = request.POST['email']
         password = request.POST['password']
 
-        user = auth.authenticate(username=email,password=password)   # here we areathenticate it take two paramaerts  from  email couse in user model we used 
+        user = auth.authenticate(username=email,password=password)   # here we are authenticate it take two paramaerts  from  email couse in user model we used
                                                                     # USERNAME_FIELD = 'email' so 
         
         if user is not None:
