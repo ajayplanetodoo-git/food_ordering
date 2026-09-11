@@ -2,7 +2,10 @@ from django.shortcuts import get_object_or_404
 from kombu.abstract import Object
 from rest_framework.response import Response
 from rest_framework import status, response
-from rest_framework.decorators import api_view, parser_classes
+from rest_framework.decorators import api_view, parser_classes,permission_classes
+from rest_framework.permissions import IsAuthenticated
+from user_accounts.models import User
+
 
 from . import serializers
 from .models import Category, FoodIteam
@@ -46,15 +49,23 @@ def categ_details_view(request, pk):
 # this is api end point for FoodItems .
 # in this function we can add new and fetch food items
 @api_view(["GET", "POST"])
+@permission_classes([IsAuthenticated])
 def food_item_view(request):
     food_item = FoodIteam.objects.all()
     if request.method == 'GET':  # get only for fetching data
         food_serializer = FoodItemSerializer(food_item, many=True)
         return Response(food_serializer.data, status=status.HTTP_200_OK)
     elif request.method == "POST":  # from Post method we can add food through api
+        if request.user.role != User.CUSTOMER:
+            return Response(
+                {"error": "Only vendors can add food"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        vendor = request.user.vendor
         serializer = FoodItemSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            food = serializer.save()
+            food = serializer.save(vendor=vendor)
             food_name = food.food_title
             food.slug = slugify(food_name) + '-' + str(food.id)
             food.is_available = True
