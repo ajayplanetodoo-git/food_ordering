@@ -11,7 +11,7 @@ from vendor_app.models import Vendor
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name','last_name','username','email','password','phone_number','role']
+        fields = ['first_name','last_name','username','email','phone_number','role']
 
     def create(self, validated_data):
         user = User.objects.create_user(username=validated_data['username'],

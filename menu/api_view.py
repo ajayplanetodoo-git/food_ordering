@@ -5,6 +5,7 @@ from rest_framework import status, response
 from rest_framework.decorators import api_view, parser_classes,permission_classes
 from rest_framework.permissions import IsAuthenticated
 from user_accounts.models import User
+from .permissions import IsVendor
 
 
 from . import serializers
@@ -49,20 +50,17 @@ def categ_details_view(request, pk):
 # this is api end point for FoodItems .
 # in this function we can add new and fetch food items
 @api_view(["GET", "POST"])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated,IsVendor])
 def food_item_view(request):
     food_item = FoodIteam.objects.all()
     if request.method == 'GET':  # get only for fetching data
         food_serializer = FoodItemSerializer(food_item, many=True)
         return Response(food_serializer.data, status=status.HTTP_200_OK)
     elif request.method == "POST":  # from Post method we can add food through api
-        if request.user.role != User.CUSTOMER:
-            return Response(
-                {"error": "Only vendors can add food"},
-                status=status.HTTP_403_FORBIDDEN
-            )
 
         vendor = request.user.vendor
+        if not vendor.is_approved:
+            return Response({"error": " Your profile is not approved yet "},status=status.HTTP_403_FORBIDDEN)
         serializer = FoodItemSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             food = serializer.save(vendor=vendor)
@@ -70,10 +68,11 @@ def food_item_view(request):
             food.slug = slugify(food_name) + '-' + str(food.id)
             food.is_available = True
             food.save()
+            print(request.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-# in this function we fetch by id and also we can update that record using pk
+# in this function we fetch by id and, also we can update that record using pk
 @api_view(["GET", "PUT"])
 @parser_classes([MultiPartParser, FormParser])
 def food_item_details(request, pk):

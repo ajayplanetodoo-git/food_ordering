@@ -19,7 +19,7 @@ from .models import FoodIteam , Category
 class FoodItemSerializer(serializers.ModelSerializer):
     class Meta :
         model = FoodIteam
-        fields =['id','vendor','category','food_title','description','price','image','is_available']
+        fields =['id','category','food_title','description','price','image','is_available']
 
 class CategorySerializer(serializers.ModelSerializer):
     fooditeams = FoodItemSerializer(many=True,read_only=True)
